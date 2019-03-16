@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId
 
 const Inning = new Schema({
     game_pk: Number,
@@ -9,14 +10,14 @@ const Inning = new Schema({
         hits: Number,
         errors: Number,
         passes: Number,
-        atbats: [String]
+        PAs: [{type: ObjectId, ref: 'PA'}]
     },
     home: {
         runs: Number,
         hits: Number,
         errors: Number,
         passes: Number,
-        atbats: [String] //atbat_id
+        PAs: [{type: ObjectId, ref: 'PA'}]
     }
 })
 

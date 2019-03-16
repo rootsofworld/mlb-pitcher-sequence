@@ -1,17 +1,19 @@
 const mongoose = require('mongoose');
-const Player = require('./Player')
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId
 
-const Atbat = new Schema({
+const PA = new Schema({
+    _id: ObjectId,
     game_pk: Number,
-    atbat_id: String, //inning_globalIndex
+    globalIndex: Number, //inning_globalIndex
+    inning: Number,
     result: {
         code: String,
         description: String
     },
-    pitcher: Player,
-    batter: Player,
-    pitches: [String], //pitch_id
+    pitcher: {type: ObjectId, ref: 'Player'},
+    batter: {type: ObjectId, ref: 'Player'},
+    pitches: [{type: ObjectId, ref: 'Pitch'}],
     totalPitches: Number,
     Runs: Number,
     hitAngle: Number,
@@ -23,4 +25,4 @@ const Atbat = new Schema({
 })
 
 
-module.exports = mongoose.model('Atbat', Atbat)
+module.exports = mongoose.model('PA', PA)

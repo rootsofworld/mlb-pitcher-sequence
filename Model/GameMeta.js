@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-const Empire = require('./Empire');
-const Player = require('./Player')
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId
 
 const GameMeta = new Schema({
     game_pk: Number,
-    awayTeam: String,
-    homeTeam: String,
+    awayTeam: {type: ObjectId, ref: 'Team'},
+    homeTeam: {type: ObjectId, ref: 'Team'},
     date: Date,
     dayNight: String,
     weather: {
@@ -14,9 +13,9 @@ const GameMeta = new Schema({
         temp: Number,
         wind: String
     },
-    empires: [Empire],
-    awayPlayers: [Player],
-    homePlayers: [Player],
+    empires: [{type: ObjectId, ref: 'Empire'}],
+    awayPlayers: [{type: ObjectId, ref: 'Player'}],
+    homePlayers: [{type: ObjectId, ref: 'Player'}],
     result: {
         innings: Number,
         awayRuns: Number,

@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId
 
 const Empire = new Schema({
-    name: String
+    _id: ObjectId,
+    name: String,
+    activeGames: [{type: ObjectId, ref: "GameMeta"}]
 })
 
 
