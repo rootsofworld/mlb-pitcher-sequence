@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Pitch = require('./Model/Pitch');
 const { basesString } = require('./util/dataTransform')
 
-mongoose.connect('mongodb://sf:105753037@localhost:27017/admin', {useNewUrlParser: true});
+mongoose.connect(""/*mongodb-login*/, {useNewUrlParser: true});
 
 let db = mongoose.connection
 
