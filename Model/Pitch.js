@@ -5,14 +5,14 @@ const ObjectId = Schema.Types.ObjectId
 const Pitch = new Schema({
     _id: String, //game_pk + indexByGame
     game_pk: Number,
-    pitcher: Object, //{Name, handSide}
+    metadata: Object,//{ venue: String, date: Date, dayNight, awayteam & hometeam: String, temp}
+    pitcher: Object, //{ID, Name, handSide}
     batter: Object,
     indexByPitcher: Number,
     indexByGame: Number,
     indexByPA: String, // "第幾個打席-該打席的第幾顆球 Ex. 3-1"
     pitchCount: String, // "balls-strikes"
     situation: Object, //{ outs, bases: String, // x-x-x  x: third-second-first, 1 for loaded, 0 for empty }
-    venue: String,
     inning: Number,
     startTimestamp: Date,
     endTimeStamp: Date,
