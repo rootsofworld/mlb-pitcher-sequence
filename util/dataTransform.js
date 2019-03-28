@@ -26,8 +26,18 @@ function basesString(runners){
     return bases.join('-')
 }
 
-console.log(basesString([]))
+/**
+ * 
+ * @param {Array<PA>} PAs 
+ * @param {Number} paIndex
+ * @param {Array<Number>} firstPAIndexes
+ * @return {Number} outs 
+ */
+function getOutsCount(PAs, paIndex, firstPAIndexes){
+    return (firstPAIndexes.include(paIndex)) ? 0 : PAs[paIndex - 1].counts.outs;
+}
 
 module.exports = {
-    basesString : basesString
+    basesString : basesString,
+    getOutsCount: getOutsCount
 }
