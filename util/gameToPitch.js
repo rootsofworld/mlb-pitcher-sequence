@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Pitch = require('./Model/Pitch');
-const { getBaseState, updateSituation } = require('./util/dataTransform')
+const Pitch = require('../Model/Pitch');
+const { getBaseState, updateSituation } = require('./dataTransform');
 
 mongoose.connect("mongodb://sf:105753037@140.119.164.168:27017/admin", {useNewUrlParser: true});
 
