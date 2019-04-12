@@ -1,17 +1,26 @@
 const mongoose = require('mongoose');
 const Pitch = require('../Model/Pitch');
 const { getBaseState, updateSituation } = require('./dataTransform');
+const program = require('commander');
 
 mongoose.connect("mongodb://sf:105753037@140.119.164.168:27017/admin", {useNewUrlParser: true});
-
 let db = mongoose.connection
+
+program.version('0.0.1')
+    .option("-w --write", "Write into DB")
+    .option("-l --limit [value]", "Set the limit of games from db")
+    .parse(process.argv)
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
 db.once('open', function dbOpenCallback(){
     let timer_start = process.hrtime()
     const Games = db.collection('games')
-    let cursor = Games.find({"gameData.game.type": "R"}).stream()
+    if(program.limit){
+        let cursor = Games.find({"gameData.game.type": "R"}).limit(program.limit).stream()
+    } else {
+        let cursor = Games.find({"gameData.game.type": "R"}).stream()
+    }
     let count = 0
 
     cursor.on('data', function dataProcessStartCallback(data){
@@ -42,6 +51,7 @@ db.once('open', function dbOpenCallback(){
             let pitches = plateAppearances[i].playEvents;
             let isFirstBatterInInning = (firstPAIndexes.includes(i)) ? true : false;
             let pitchCount = 0;
+            let prevPitchIndex = 0
 
             console.log("===========================")
             console.log(`Game_pk : ${game_pk}`)
@@ -114,7 +124,7 @@ db.once('open', function dbOpenCallback(){
                             //Pitch Data
                             startTime: pitches[j].startTime,
                             endTime: pitches[j].endTime,
-                            pitchCount: `${pitches[j].count.balls}-${pitches[j].count.strikes}`,
+                            count: (pitchCount === 1) ? "0-0" : `${pitches[prevPitchIndex].count.balls}-${pitches[prevPitchIndex].count.strikes}`,
                             x: pitches[j].pitchData.coordinates.x,
                             y: pitches[j].pitchData.coordinates.y,
                             pitchResultCode: pitches[j].details.code,
@@ -136,6 +146,7 @@ db.once('open', function dbOpenCallback(){
                             nastyFactor: null,
                             hitData: (pitches[j].hitData) ? pitches[j].hitData : null
                         })
+                        prevPitchIndex = j
                     } else {
                         console.log(`PitchInfo: ${ i+1 }-${ pitchCount }. x: ${pitches[j].pitchData.coordinates.x}, y: ${pitches[j].pitchData.coordinates.y}`)
                         let s = {
@@ -159,7 +170,7 @@ db.once('open', function dbOpenCallback(){
                             //Pitch Data
                             startTime: pitches[j].startTime,
                             endTime: pitches[j].endTime,
-                            pitchCount: `${pitches[j].count.balls}-${pitches[j].count.strikes}`,
+                            count: (pitchCount === 1) ? "0-0" : `${pitches[prevPitchIndex].count.balls}-${pitches[prevPitchIndex].count.strikes}`,
                             x: pitches[j].pitchData.coordinates.x,
                             y: pitches[j].pitchData.coordinates.y,
                             pitchResultCode: pitches[j].details.code,
@@ -181,8 +192,9 @@ db.once('open', function dbOpenCallback(){
                             nastyFactor: pitches[j].pitchData.nastyFactor,
                             hitData: (pitches[j].hitData) ? pitches[j].hitData : null
                         })
+                        prevPitchIndex = j
                     }
-                }
+                } // if isPitch = true
 
                 if(pitches[j].type === 'action'){
                     situation.actions.push(pitches[j].details.description)
@@ -194,12 +206,14 @@ db.once('open', function dbOpenCallback(){
                 }
             }// pitches
         }//PAs
-        Pitch.insertMany(pitchesData, function insertCallBack(err, data){
-            if(err) throw err;
-
-            console.info("Write in DB: %d pitches", count)
-
-        })
+        if(program.write){
+            Pitch.insertMany(pitchesData, function insertCallBack(err, data){
+                if(err) throw err;
+    
+                console.info("Write in DB: %d pitches", count)
+    
+            })
+        }
     })// cursor.on('data')
 
     cursor.on('close', function dataProcessFinishedCallback(){

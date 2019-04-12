@@ -14,7 +14,7 @@ const Pitch = new Schema({
     inning: String,
     situation: Object, //{ outs, bases: String, // x-x-x  x: third-second-first, 1 for loaded, 0 for empty }
     //pitch
-    pitchCount: String, // "balls-strikes"
+    count: String, // "balls-strikes"
     pitchType: String,
     pitchTypeCode: String,
     startTime: Date,
