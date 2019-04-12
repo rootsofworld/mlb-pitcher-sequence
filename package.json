@@ -11,5 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "mongoose": "^5.4.20"
+  },
+  "devDependencies": {
+    "express": "^4.16.4",
+    "webpack": "^4.29.6"
   }
 }
