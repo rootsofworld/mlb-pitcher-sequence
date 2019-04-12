@@ -16,12 +16,13 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function dbOpenCallback(){
     let timer_start = process.hrtime()
     const Games = db.collection('games')
+    let cursor = null
     if(program.limit){
-        let cursor = Games.find({"gameData.game.type": "R"}).limit(program.limit).stream()
+        cursor = Games.find({"gameData.game.type": "R"}).limit(parseInt(program.limit)).stream()
     } else {
-        let cursor = Games.find({"gameData.game.type": "R"}).stream()
+        cursor = Games.find({"gameData.game.type": "R"}).stream()
     }
-    let count = 0
+    let totalCount = 0
 
     cursor.on('data', function dataProcessStartCallback(data){
         let pitchesData = []
@@ -94,12 +95,12 @@ db.once('open', function dbOpenCallback(){
             console.log(`Pitcher : ${pitcher.name}`)
             console.log(`Batter : ${batter.name}`)
             console.log(`Result : ${event}`)
-            console.log(count)
+            console.log(totalCount)
             console.log('\n')
 
             for(let j = 0; j < pitches.length; j++){
                 if(pitches[j].isPitch){
-                    count++
+                    totalCount++
                     pitchCount++
                     if(pitches[j].details.type === undefined){
                         console.log(`PitchInfo: ${ i+1 }-${ pitchCount }. x: ${pitches[j].pitchData.coordinates.x}, y: ${pitches[j].pitchData.coordinates.y}`)
@@ -109,7 +110,9 @@ db.once('open', function dbOpenCallback(){
                             bases: situation.bases.map(b => (b.id) ? 1 : 0).join('-'),
                             actions: situation.actions
                         }
+                        let count = (pitchCount === 1) ? "0-0" : `${pitches[prevPitchIndex].count.balls}-${pitches[prevPitchIndex].count.strikes}` 
                         console.info("Situation: %s", JSON.stringify(s))
+                        console.info("Count: %s", count)
                         pitchesData.push({
                             _id: mongoose.Types.ObjectId(),
                             game_pk: game_pk,
@@ -124,7 +127,7 @@ db.once('open', function dbOpenCallback(){
                             //Pitch Data
                             startTime: pitches[j].startTime,
                             endTime: pitches[j].endTime,
-                            count: (pitchCount === 1) ? "0-0" : `${pitches[prevPitchIndex].count.balls}-${pitches[prevPitchIndex].count.strikes}`,
+                            count: count,
                             x: pitches[j].pitchData.coordinates.x,
                             y: pitches[j].pitchData.coordinates.y,
                             pitchResultCode: pitches[j].details.code,
@@ -155,7 +158,9 @@ db.once('open', function dbOpenCallback(){
                             bases: situation.bases.map(b => (b.id) ? 1 : 0).join('-'),
                             actions: situation.actions
                         }
+                        let count = (pitchCount === 1) ? "0-0" : `${pitches[prevPitchIndex].count.balls}-${pitches[prevPitchIndex].count.strikes}` 
                         console.info("Situation: %s", JSON.stringify(s))
+                        console.info("Count: %s", count)
                         pitchesData.push({
                             _id: mongoose.Types.ObjectId(),
                             game_pk: game_pk,
@@ -170,7 +175,7 @@ db.once('open', function dbOpenCallback(){
                             //Pitch Data
                             startTime: pitches[j].startTime,
                             endTime: pitches[j].endTime,
-                            count: (pitchCount === 1) ? "0-0" : `${pitches[prevPitchIndex].count.balls}-${pitches[prevPitchIndex].count.strikes}`,
+                            count: count, 
                             x: pitches[j].pitchData.coordinates.x,
                             y: pitches[j].pitchData.coordinates.y,
                             pitchResultCode: pitches[j].details.code,
@@ -192,6 +197,9 @@ db.once('open', function dbOpenCallback(){
                             nastyFactor: pitches[j].pitchData.nastyFactor,
                             hitData: (pitches[j].hitData) ? pitches[j].hitData : null
                         })
+                        if(pitches[j].hitData){
+                            console.info("HitData: %s", JSON.stringify(pitches[j].hitData))
+                        }
                         prevPitchIndex = j
                     }
                 } // if isPitch = true
@@ -210,16 +218,15 @@ db.once('open', function dbOpenCallback(){
             Pitch.insertMany(pitchesData, function insertCallBack(err, data){
                 if(err) throw err;
     
-                console.info("Write in DB: %d pitches", count)
+                console.info("Write in DB: %d pitches", totalCount)
     
             })
         }
     })// cursor.on('data')
 
     cursor.on('close', function dataProcessFinishedCallback(){
-        count = count + 1
         hrend = process.hrtime(timer_start)
-        console.info("Done: %d pitches", count)
+        console.info("Done: %d pitches", totalCount)
         console.info('Execution time: %dm %ds %dms', Math.floor(hrend[0] / 60), Math.floor(hrend[0]) % 60, Math.round(hrend[1] % 1000))
     })
 })
