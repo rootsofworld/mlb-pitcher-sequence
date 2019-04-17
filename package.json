@@ -4,17 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "start": "npm run build && node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "commander": "^2.20.0",
-    "mongoose": "^5.4.20"
+    "d3": "^5.9.2",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "tar": "^4.4.8"
   },
   "devDependencies": {
-    "express": "^4.16.4",
-    "webpack": "^4.29.6"
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.1",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
   }
 }
