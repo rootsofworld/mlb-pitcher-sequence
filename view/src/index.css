@@ -12,3 +12,58 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+#main {
+  display: grid;
+  grid-template-columns: 200px 800px;
+  grid-template-rows: 600px 200px;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  justify-content: center;
+  padding: 10px;
+}
+
+#filters {
+  background-color: gray;
+  grid-column: 1 / 2;
+  grid-row: 1 / end;
+}
+
+.header {
+  padding: 10px 33%;
+  font-size: 24px;
+  color: white;
+}
+
+.filter-header::after {
+  
+}
+
+ul.filter-list {
+    list-style-type: none;
+}
+
+ul.filter-list > li{
+  margin: 8px auto;
+  padding: auto 15px;
+}
+
+#strikezone {
+  background-color: gray;
+  grid-column: 2 / end;
+  grid-row: 1 / 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center; 
+}
+
+#pitch-seq {
+  background-color: gray;
+  grid-column: 2 / end;
+  grid-row: 2 / end;
+}
+
+polygon:hover {
+  fill: pink;
+}
