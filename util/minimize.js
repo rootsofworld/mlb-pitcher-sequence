@@ -10,11 +10,12 @@ let count = 0
 
 cursor.on('data', function(pitch){
     console.log(++count)
+    let scores = pitch.situation.scores.split('-')
     pitches.push({
         _id: pitch._id,
         pitcher: pitch.pitcher,
         batter: pitch.batter,
-        metadata: `${pitch.game_pk}:${pitch.inning}:${pitch.indexByPA}:${pitch.situation.awayScore}-${pitch.situation.homeScore}:${pitch.situation.outs}:${pitch.situation.bases}:${pitch.count}`,//game_pk: inning: indexByPA: awayScore-homeScore: outs: bases: count
+        metadata: `${pitch.game_pk}:${pitch.inning}:${pitch.indexByPA}:${scores[0]}-${scores[1]}:${pitch.situation.outs}:${pitch.situation.bases}:${pitch.count}`,//game_pk: inning: indexByPA: awayScore-homeScore: outs: bases: count
         px: pitch.px,
         pz: pitch.pz,
         type: pitch.pitchType,
