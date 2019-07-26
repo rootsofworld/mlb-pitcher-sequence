@@ -5,7 +5,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import * as d3 from 'd3';
 import Zone from './zone';
-
+import zoneChart from './zoneChart';
+import {pitcherFilter, batterFilter, stateFilter} from './filter.js';
+import flowChart from './flowChart'
 
 async function getData(){
 
@@ -17,13 +19,53 @@ async function getData(){
     return json;
 }
 
-let width = 600
-let height = 800
+let data = null
+let container = document.getElementById('flowgraph-container')
+let pitcher = document.getElementById('pitcher')
+let batter = document.getElementById('batter')
+let pitchIndex = document.getElementById('pitch-index')
+let zoom = d3.zoom().on("zoom", zoomed)
+let graphBody = null
+let graphSVG = d3.select(container).append('svg')
+                .attr('width', '100%')
+                .attr('height', '100%')
+                .attr('transform', `translate(${10}, ${10})`)
 
-let zone = new Zone(width, height)
+pitcher.addEventListener('change', function(e){
+    let p = e.target.value
+    graphSVG.select('g').remove()
+    graphBody = zoneChart(graphSVG, data.filter(d => d.pitcher.name === p), 30, 30)
+    graphBody.call(zoom);
+})
 
-getData().then(data => {
+batter.addEventListener('change', function(e){
+    let p = e.target.value
+    graphSVG.select('g').remove()
+    graphBody = zoneChart(graphSVG, data.filter(d => d.batter.name === p), 30, 30)
+    graphBody.call(zoom);
+})
+
+pitchIndex.addEventListener('change', function(e){
+    let i = e.target.value
+    graphBody.selectAll('circle').attr('visibility', 'hidden')
+    graphBody.selectAll(`circle:nth-last-child(-n+${i})`).attr('visibility', 'visible')
+})
+
+function zoomed() {
+    console.log(d3.event.type)
+    graphBody.attr("transform", d3.event.transform);
+}
+
+getData().then(flows => {
     //ReactDOM.render(<App data={data}/>, document.getElementById('root'));
+    data = flows
+    console.log(flows[0])
+    let default_set = flows.filter(d => d.pitcher.name === "Chris Sale")
+    graphBody = zoneChart(graphSVG, default_set, 30, 30)
+    let pitchFlow = new flowChart(default_set)
+    console.log(pitchFlow.flow)
+
+    /*
     data.forEach(d => {
         if(!d.type){
             d.type = "unknown"
@@ -49,23 +91,7 @@ getData().then(data => {
 
     let visibleFlows = flows.slice(0, 5)
     
-    /**
-     * 
-     * @param {Array<Pitch>} pitches 
-     * @param {Zone} zone 
-     */
-    function pitchScatter(pitches, zone){
-        
-    }
-
-    /**
-     * 
-     * @param {Array<Pitch>} pitches 
-     * @param {Zone} zone 
-     */
-    //function pitchFlow(pitches, zone){
-
-   // }
+   
     /*
     let pitchesScatter = zone.svg.selectAll('circle')
                     .data(visibleFlows.reduce((pre, curr) => pre.concat(curr))).enter()
@@ -85,7 +111,7 @@ getData().then(data => {
                     .attr("stroke-width", "3px")
                     .attr('stroke-opacity', 0.5)
                     .attr('fill', 'none')
-    */
+    
 
     let contours = d3.contourDensity()
                     .x(d => zone.x(d.px))
@@ -173,6 +199,7 @@ getData().then(data => {
         }
         console.log('hidden')
     })
+    */
 })
 
 

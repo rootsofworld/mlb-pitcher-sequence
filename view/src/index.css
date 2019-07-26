@@ -6,6 +6,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: white;
 }
 
 code {
@@ -24,9 +25,12 @@ code {
 }
 
 #filters {
-  background-color: gray;
+  background-color: white;
   grid-column: 1 / 2;
   grid-row: 1 / end;
+  color: #2abbac;
+  border-color: #2abbac;
+  border-width: 2px;
 }
 
 .header {
@@ -48,8 +52,8 @@ ul.filter-list > li{
   padding: auto 15px;
 }
 
-#strikezone {
-  background-color: gray;
+#flowgraph {
+  background-color: white;
   grid-column: 2 / end;
   grid-row: 1 / 2;
   display: flex;
@@ -58,10 +62,19 @@ ul.filter-list > li{
   align-items: center; 
 }
 
+#flowgraph-container {
+  width: 90%;
+  height:90%;
+}
+
 #pitch-seq {
-  background-color: gray;
+  background-color: white;
   grid-column: 2 / end;
   grid-row: 2 / end;
+}
+
+#pitch-index {
+  margin-top: 30px;
 }
 
 polygon:hover {

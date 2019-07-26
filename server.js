@@ -20,7 +20,7 @@ app.get('/data/all', (req, res) => {
     res.setHeader('Content-Encoding', 'gzip')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
-    let file = fs.createReadStream('./data/pitches2018-min.json')
+    let file = fs.createReadStream('./data/flows.json')
     file.pipe(gzip).pipe(res)
 
     res.on('finish', () => {

@@ -4,9 +4,10 @@ import * as d3 from 'd3';
  * 
  * @param {Number} width canvas width 
  * @param {Number} height canvas height
+ * @param {d3ColorSchema}
  */
 export default class Zone {
-    constructor( width, height ){
+    constructor( width = 400, height = 400, colorSet = d3.schemeSet3 ){
         const homeplateWidth = 1.42
         const homeplateGapWidth = 0.5
         const homeplateTotal = homeplateWidth + (homeplateGapWidth * 2)
@@ -58,33 +59,31 @@ export default class Zone {
             },
             {
                 number: 10,
-                points: [[-1.21, 0], [0, 0], [0, 1.7], [-0.96, 1.7], [-0.96, 2.6], [-1.21, 2.6]]
+                points: [[-2, 0], [0, 0], [0, 1.7], [-0.96, 1.7], [-0.96, 2.6], [-2, 2.6]]
             },
             {
                 number: 11,
-                points: [[0, 0], [1.21, 0], [1.21, 2.6], [0.96, 2.6], [0.96, 1.7], [0, 1.7]]
+                points: [[0, 0], [2, 0], [2, 2.6], [0.96, 2.6], [0.96, 1.7], [0, 1.7]]
             },
             {
                 number: 12,
-                points: [[-1.21, 2.6], [-0.96, 2.6], [-0.96, 3.5], [0, 3.5], [0, 3.75], [-1.21, 3.75]]
+                points: [[-2, 2.6], [-0.96, 2.6], [-0.96, 3.5], [0, 3.5], [0, 4], [-2, 4]]
             },
             {
                 number: 13,
-                points: [[0, 3.5], [0.96, 3.5], [0.96, 2.6], [1.21, 2.6], [1.21, 3.75], [0, 3.75]]
+                points: [[0, 3.5], [0.96, 3.5], [0.96, 2.6], [2, 2.6], [2, 4], [0, 4]]
             }
         ]
         
-        this.zoneWidth = width * 0.5
-        this.zoneHeight = height * 0.5
-        this.x = d3.scaleLinear().range([0, this.zoneWidth]).domain([-1.5, 1.5])
-        this.y = d3.scaleLinear().range([this.zoneHeight, 0]).domain([1, 4])
-        this.pitchTypeColor = d3.scaleOrdinal(d3.schemeSet3).domain(["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "FO", "EP", "PO", "SC", "KN", "unknown"])
-        
-        
-        this.svg = d3.select('#strikezone-container').append('svg')
-                        .attr('width', this.zoneWidth).attr('height', this.zoneHeight)
-
-        this.polygons =  this.svg.selectAll('polygon')
+        this.zoneWidth = width
+        this.zoneHeight = height
+        this.xScale = d3.scaleLinear().range([0, this.zoneWidth]).domain([-2, 2])
+        this.yScale = d3.scaleLinear().range([this.zoneHeight, 0]).domain([0, 4])
+        this.xZoneScale = d3.scaleLinear().range([0, this.zoneWidth]).domain([0, 4])
+        this.yZoneScale = d3.scaleLinear().range([0, this.zoneHeight]).domain([0, 4])
+        this.color = d3.scaleOrdinal(colorSet).domain(["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"])
+        /*
+        this.polygons =  this.g.selectAll('polygon')
                         .data(areas)
                         .enter().append('polygon')
                         .attr('points', (d) => {
@@ -95,7 +94,35 @@ export default class Zone {
                         .attr('class', d => d.number)
                         .attr('stroke', 'blue')
                         .attr('fill', 'white')
+        */
     }
+
+    get szW(){
+        return this.xZoneScale(1.92);
+    }
+
+    get szH(){
+        return this.yZoneScale(1.8);
+    }
+
+    get szTranslateX(){
+        return this.xZoneScale(1.04)
+    }
+
+    get szTranslateY(){
+        return this.yZoneScale(0.5)
+    }
+
+    /**
+     * 
+     * @param {d3Selection} ctnr 
+     */
+    getZone(ctnr){
+        return d3.select(ctnr).append('g')
+            .attr('width', this.zoneWidth).attr('height', this.zoneHeight)
+            .attr('class', 'zone')
+    }
+    
     
     /*              
     let c = zone.selectAll('circle')
