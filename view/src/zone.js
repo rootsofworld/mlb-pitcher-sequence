@@ -7,7 +7,7 @@ import * as d3 from 'd3';
  * @param {d3ColorSchema}
  */
 export default class Zone {
-    constructor( width = 400, height = 400, colorSet = d3.schemeSet3 ){
+    constructor( width = 30, height = 30, colorSet = d3.schemeCategory10 ){
         const homeplateWidth = 1.42
         const homeplateGapWidth = 0.5
         const homeplateTotal = homeplateWidth + (homeplateGapWidth * 2)
