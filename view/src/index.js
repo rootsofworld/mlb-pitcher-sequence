@@ -7,7 +7,7 @@ import * as d3 from 'd3';
 import Zone from './zone';
 import zoneChart from './zoneChart';
 import {pitcherFilter, batterFilter, stateFilter} from './filter.js';
-import flowChart from './flowChart'
+import PitchSeq from './PitchSeq'
 
 async function getData(){
 
@@ -62,7 +62,7 @@ getData().then(flows => {
     console.log(flows[0])
     let default_set = flows.filter(d => d.pitcher.name === "Chris Sale")
     graphBody = zoneChart(graphSVG, default_set, 30, 30)
-    let pitchFlow = new flowChart(default_set)
+    let pitchFlow = new PitchSeq(default_set)
     console.log(pitchFlow.flow)
 
     /*

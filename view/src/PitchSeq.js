@@ -1,7 +1,7 @@
 import Zone from './zone.js'
 import * as d3 from 'd3';
 
-export default class flowChart {
+export default class PitchSeq {
     constructor(sequences){
         this.origin = sequences
         this.flow = this.indexAlignment(sequences.map(seq => seq.flow))
