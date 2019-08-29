@@ -10,17 +10,17 @@ const port = (process.argv[2]) ? process.argv[2] : 3000;
 
 app.use(express.static(path.resolve('static')))
 
-app.get('/data/all', (req, res) => {
+app.get('/data/all-pa', (req, res) => {
     
     let gzip = zlib.createGzip({
         windowBits: 15, 
         memLevel: 9
     });
-    console.log('Data request received: /data/all')
+    console.log('Data request received: /data/all-pa')
     res.setHeader('Content-Encoding', 'gzip')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
-    let file = fs.createReadStream('./data/flows.json')
+    let file = fs.createReadStream('./data/all_pa_2018_r.json')
     file.pipe(gzip).pipe(res)
 
     res.on('finish', () => {
@@ -28,12 +28,12 @@ app.get('/data/all', (req, res) => {
     })
 })
 
-app.get('/data/tsne', (req, res) => {
+app.get('/data/pitcher-profile', (req, res) => {
     
-    console.log('Data request received: /data/tsne')
+    console.log('Data request received: /data/pitcher-profile')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
-    let file = fs.readFile('./data/tsne-r-1.json', (err, file) => {
+    let file = fs.readFile('./data/pitcher-profile.json', (err, file) => {
         if(err) throw err;
         res.send(file);
     })

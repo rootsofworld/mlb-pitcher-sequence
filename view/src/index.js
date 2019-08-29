@@ -14,16 +14,16 @@ ReactDOM.render(<Filter/>, document.getElementById('test'));
 
 async function getData(){
 
-    let res = await fetch('http://localhost:3002/data/all', {mode: 'cors'})
+    let res = await fetch('http://localhost:3002/data/all-pa', {mode: 'cors'})
     let stream = res.body
     let response = new Response(stream)
-    let json =  await response.json()
+    let all_pa =  await response.json()
 
     //pitcher tsne data
-    let resTSNE = await fetch('http://localhost:3002/data/tsne', {mode: 'cors'})
-    let jsonTSNE =  await resTSNE.json()
+    let resPP = await fetch('http://localhost:3002/data/pitcher-profile', {mode: 'cors'})
+    let pp =  await resPP.json()
 
-    return [json, jsonTSNE];
+    return [all_pa, pp];
 }
 
 let flows = null;
@@ -66,19 +66,6 @@ function zoomed() {
     graphBody.attr("transform", d3.event.transform);
 }
 
-function pitcherCluster(data){
-    //kNN
-    let cluster = {}
-
-    cluster.focus = function(pitcher){
-        //hightlight KNN(pitcher) points
-    }
-
-    cluster.update = function(data){
-        
-    }
-    
-}
 
 getData().then(data => {
     //ReactDOM.render(<App data={data}/>, document.getElementById('root'));

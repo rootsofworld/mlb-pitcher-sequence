@@ -1,3 +1,5 @@
 function Sankey(){
-    let 
+    let sankey = {}
+    let nodeHeight
+
 }
