@@ -16,7 +16,7 @@ app.get('/data/all', (req, res) => {
         windowBits: 15, 
         memLevel: 9
     });
-    console.log('Data request received')
+    console.log('Data request received: /data/all')
     res.setHeader('Content-Encoding', 'gzip')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -25,6 +25,17 @@ app.get('/data/all', (req, res) => {
 
     res.on('finish', () => {
         console.log('Done')
+    })
+})
+
+app.get('/data/tsne', (req, res) => {
+    
+    console.log('Data request received: /data/tsne')
+    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    let file = fs.readFile('./data/tsne-r-1.json', (err, file) => {
+        if(err) throw err;
+        res.send(file);
     })
 })
 

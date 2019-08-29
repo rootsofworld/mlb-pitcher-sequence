@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 export default function zoneChart(svg, data, zoneW, zoneH){
 
     let padding = {x:50, y:50}
-    let zone = new Zone(zoneW, zoneH, d3.schemeCategory10)
+    let zone = new Zone(zoneW, zoneH)
 
     let graph = svg.append('g')
             .attr('width', '90%')

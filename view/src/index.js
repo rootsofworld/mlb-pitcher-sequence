@@ -8,6 +8,9 @@ import Zone from './zone';
 import zoneChart from './zoneChart';
 import {pitcherFilter, batterFilter, stateFilter} from './filter.js';
 import PitchSeq from './PitchSeq'
+import Filter from './components/Filter';
+
+ReactDOM.render(<Filter/>, document.getElementById('test'));
 
 async function getData(){
 
@@ -16,17 +19,24 @@ async function getData(){
     let response = new Response(stream)
     let json =  await response.json()
 
-    return json;
+    //pitcher tsne data
+    let resTSNE = await fetch('http://localhost:3002/data/tsne', {mode: 'cors'})
+    let jsonTSNE =  await resTSNE.json()
+
+    return [json, jsonTSNE];
 }
 
-let data = null
-let container = document.getElementById('flowgraph-container')
-let pitcher = document.getElementById('pitcher')
-let batter = document.getElementById('batter')
-let pitchIndex = document.getElementById('pitch-index')
-let zoom = d3.zoom().on("zoom", zoomed)
+let flows = null;
+let pitchers = null;
+let flowContainer = document.getElementById('flowgraph-container');
+let zoneContainer = document.getElementById('zone');
+let pitcher = document.getElementById('pitcher');
+let batter = document.getElementById('batter');
+let pitchIndex = document.getElementById('pitch-index');
+let zoom = d3.zoom().on("zoom", zoomed);
 let graphBody = null
-let graphSVG = d3.select(container).append('svg')
+let _zone = new Zone()
+let graphSVG = d3.select(zoneContainer).append('svg')
                 .attr('width', '100%')
                 .attr('height', '100%')
                 .attr('transform', `translate(${10}, ${10})`)
@@ -34,14 +44,14 @@ let graphSVG = d3.select(container).append('svg')
 pitcher.addEventListener('change', function(e){
     let p = e.target.value
     graphSVG.select('g').remove()
-    graphBody = zoneChart(graphSVG, data.filter(d => d.pitcher.name === p), 30, 30)
+    graphBody = zoneChart(graphSVG, flows.filter(d => d.pitcher.name === p), 30, 30)
     graphBody.call(zoom);
 })
 
 batter.addEventListener('change', function(e){
     let p = e.target.value
     graphSVG.select('g').remove()
-    graphBody = zoneChart(graphSVG, data.filter(d => d.batter.name === p), 30, 30)
+    graphBody = zoneChart(graphSVG, flows.filter(d => d.batter.name === p), 30, 30)
     graphBody.call(zoom);
 })
 
@@ -56,14 +66,38 @@ function zoomed() {
     graphBody.attr("transform", d3.event.transform);
 }
 
-getData().then(flows => {
+function pitcherCluster(data){
+    //kNN
+    let cluster = {}
+
+    cluster.focus = function(pitcher){
+        //hightlight KNN(pitcher) points
+    }
+
+    cluster.update = function(data){
+        
+    }
+    
+}
+
+getData().then(data => {
     //ReactDOM.render(<App data={data}/>, document.getElementById('root'));
-    data = flows
+    flows = data[0]
+    pitchers = data[1]
+    console.log(pitchers)
     console.log(flows[0])
+
+    //Draw zone chart
     let default_set = flows.filter(d => d.pitcher.name === "Chris Sale")
     graphBody = zoneChart(graphSVG, default_set, 30, 30)
+
+    //pitchSeq
     let pitchFlow = new PitchSeq(default_set)
     console.log(pitchFlow.flow)
+
+    //draw tsne scatter
+    
+
 
     /*
     data.forEach(d => {
