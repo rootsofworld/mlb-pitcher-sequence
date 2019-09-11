@@ -15,4 +15,49 @@
     width: 300px;
     border: solid black 1px;
     padding: 0 20px;
+    background-color: white;
+    grid-column: 1 / 2;
+    grid-row: 1 / end;
+    color: black;
+    border-color: #2abbac;
+    border-width: 2px;
+  }
+
+  #root {
+    display: grid;
+    grid-template-columns: 200px 800px;
+    grid-template-rows: 600px 200px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  #flowgraph {
+    background-color: white;
+    grid-column: 2 / end;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; 
+  }
+  
+  #flowgraph-container {
+    width: 90%;
+    height:90%;
+  }
+  
+  #pitch-seq {
+    background-color: white;
+    grid-column: 2 / end;
+    grid-row: 2 / end;
+  }
+  
+  #pitch-index {
+    margin-top: 30px;
+  }
+  
+  polygon:hover {
+    fill: pink;
   }
