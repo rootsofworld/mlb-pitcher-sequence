@@ -1,80 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="theme-color" content="#000000" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="theme-color" content="#000000">
+	<!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <title>Baseball pitching analysis</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="test"></div>
-    <div id="main">
-      <div id="filters">
-        <div class="header">Filters</div>
-        <form class="filter-list" action="#">
-          <p id="player-filter">
-              <div class="row">
-                  <div class="input-field col s6">
-                    <input placeholder="ALL" id="pitcher" type="text" class="validate">
-                    <label for="pitcher">Pitcher</label>
-                  </div>
-                  <div class="input-field col s6">
-                    <input placeholder="ALL" id="batter" type="text" class="validate">
-                    <label for="batter">Batter</label>
-                  </div>
-                </div>
-          </p>
-          <p>
-            <div class="row">
-              <input type="range" id="outs-filter" min="0" max="2" value="0">
-            </div>
-          </p>
-          <p>
-            <label for="third-base" >
-              <input type="checkbox" id="third-base" class="filled-in"/>
-              <span>3rd</span>
-            </label>
-            <label for="second-base">
-              <input type="checkbox" id="second-base" class="filled-in"/>
-              <span>2nd</span>
-            </label>
-            <label for="first-base">
-                <input type="checkbox" id="first-base" class="filled-in"/>
-                <span>1st</span>
-            </label>
-          </p>
-        </ul>
-      </div>
-      <div id="flowgraph">
-        <div class="header">Flow</div>
-        <div id="flowgraph-container"></div>
-      </div>
-      <div id="zone">
-        <div class="horizontal-list">
-          <input type="range" id="pitch-index" value="1" min="1" max="21">
-        </div>
-      </div>
-    </div>
-  </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+	<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+	<title>React App</title>
+</head>
+
+<body>
+	<noscript>
+		You need to enable JavaScript to run this app.
+	</noscript>
+	<div id="root"></div>
+</body>
 </html>

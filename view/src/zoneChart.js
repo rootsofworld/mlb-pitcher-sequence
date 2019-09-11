@@ -40,7 +40,7 @@ export default function zoneChart(svg, data, zoneW, zoneH){
         .attr('cy', d => zone.yScale(d.pz))
         .attr('fill', d => zone.color(d.typeCode))
         .attr('r', 3)
-        .attr('class', (d, i) => `${i+1} ${d.typeCode}`)
+        .attr('class', (d, i) => `${i+1}-${d.typeCode}`)
 
     return graph
 

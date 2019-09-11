@@ -1,0 +1,18 @@
+.App {
+    font-family: sans-serif;
+  }
+  
+  p {
+    font-size: 20px;
+    line-height: 10px;
+  }
+  
+  .input-container, .field-container {
+    margin: 0 0 20px 0;
+  }
+  
+  .sidebar {
+    width: 300px;
+    border: solid black 1px;
+    padding: 0 20px;
+  }
