@@ -27,17 +27,12 @@ function StateFilter(props) {
     props.onStateUpdate({ ...props.state, batter: evt.target.value });
   }
 
+  function stateFilterOnOff(evt){
+    props.onFilterSwitch(evt.target.checked)
+  }
+
   return (
     <div id="state-filter" className="input-container">
-      <div className="field-container">
-        <span>Outs: </span>
-        <select id="outs" defaultValue="0" onChange={e => handleOutsUpdate(e)}>
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-        </select>
-      </div>
-      <Bases handler={handleBasesUpdate} />
       <div className="field-container">
         <p>Batter</p>
         <div>
@@ -45,9 +40,27 @@ function StateFilter(props) {
             id="batter-name"
             type="text"
             placeholder="Choose a batter"
-            onChange={e => handleBatterUpdate(e)}
+            onChange={ handleBatterUpdate }
           />
         </div>
+      </div>
+      <div className="field-container">
+        <span>
+          <span style={{marginRight:'10px'}}>
+            Outs:
+          </span>
+          <select id="outs" defaultValue="0" onChange={ handleOutsUpdate }>
+            <option>0</option>
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </span>
+      </div>
+      <Bases handler={ handleBasesUpdate } />
+      <div style={{height:10}}/>
+      <div className="field-container">
+        <label htmlFor="all">StateFilter On/Off</label>
+        <input type='checkbox' id="all" onChange={ stateFilterOnOff } defaultChecked={props.isFilterOn}/>
       </div>
     </div>
   );

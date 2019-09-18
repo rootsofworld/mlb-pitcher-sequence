@@ -15,8 +15,8 @@ function Bases(props) {
   const baseStyle = document.createElement("style");
   baseStyle.type = "text/css";
   baseStyle.innerHTML = `.base { 
-        width:25px;
-        height:25px;
+        width:20px;
+        height:20px;
         background-color: gray;
         transform: rotate(45deg);
       }`;
@@ -25,7 +25,8 @@ function Bases(props) {
 
   return (
     <div id="bases" className="field-container" sytle="width: 30%;">
-      <div>Bases</div>
+      <p>Bases</p>
+      <div style={{height:5}}/>
       <div style={containerStyle}>
         <div id="second-base" className="base" onClick={props.handler} />
       </div>

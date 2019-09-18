@@ -1,42 +1,21 @@
 import React, {useEffect} from "react";
 import * as d3 from 'd3';
+import BubbleList from './BubbleList';
+import BarChart from './BarChart';
 
 function PitcherFilter(props) {
-  const group = React.createRef();
+    let map = new Map(props.typeset)
+    let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
+    let pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
+    let pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchType);
+    let scale = d3.scaleLinear().domain([0, 1]).range([6, 18]) 
 
-  useEffect(() => {
-    //unify type order
-    const map = new Map(props.typeset)
-    const pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
-    const pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
-    //End
-    const pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchType);
-    const dotScale = d3.scaleLinear().domain([0, 1]).range([6, 18])
-    const wrapper = d3.select(group.current)
-    wrapper.select('g').remove()
-    const boundGroups = wrapper.append('g')
-          .attr('transform', `translate(${0},${10})`)
-          .selectAll('g')
-          .data(pitchType)
-    
-    const unBoundData = boundGroups.enter()
-        .append('g')
-        .attr('transform', (d, i) => (i <= 4) ? `translate(${i*45}, ${10})` : `translate(${i%5*45}, ${80})`)
-        
-    unBoundData.append('circle')
-        .attr('fill', d => pitchColor(d[0]))
-        .attr('opacity', d => (d[1] > 0) ? 1.0 : 0.2)
-        .attr('cx', 15)
-        .attr('cy', 20)
-        .attr('r', d => dotScale(d[1]))
-    const texts = unBoundData.append('text')
-    texts
-      .style('text-anchor', 'start')
-      .attr("alignment-baseline", "start")
-      .style("fill", "black")
-      .style("font-size", 14)
-      .text(d => d[0])
-  }, [props.typeset, group])
+    useEffect(() => {
+        map = new Map(props.typeset)
+        pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
+        pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchType);
+        scale = d3.scaleLinear().domain([0, 1]).range([6, 18]) 
+    }, [props.typeset])
 
   function handlePitcherUpdate(evt) {
     props.onPitcherUpdate(evt.target.value);
@@ -56,9 +35,20 @@ function PitcherFilter(props) {
         </div>
       </div>
       <div id="typelist" className="field-container">
-        <svg width='100%' height='100%' ref={group}></svg>
+        {/*<BubbleList 
+            color={pitchColor}
+            size={scale}
+            typeset={pitchType}
+        />*/}
+        <BarChart
+            margin={{top:20, left:25}}
+            width={250}
+            height={150}
+            color={pitchColor}
+            typeset={pitchType}
+        />
       </div>
-      <hr/>
+      <div className="seperator"/>
     </div>
   );
 }

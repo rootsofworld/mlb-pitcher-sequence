@@ -10,7 +10,12 @@ function Filter(props) {
         typeset={props.pitcherProfile.typeset}
         onPitcherUpdate={props.onPitcherUpdate}
       />
-      <StateFilter state={props.state} onStateUpdate={props.onStateUpdate} />
+      <StateFilter
+        state={props.state}
+        onStateUpdate={props.onStateUpdate}
+        onFilterSwitch={props.onFilterSwitch}
+        isFilterOn={props.isFilterOn}
+      />
     </div>
   );
 }
