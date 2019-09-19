@@ -46,6 +46,10 @@
   color: black;
 }
 
+.tick text {
+  font-weight: bold;
+}
+
 #tsne {
   grid-column: 1 / 2;
   grid-row: 2 / end;

@@ -43,7 +43,7 @@ function App(props) {
   //D3 Init End
 
   //State Init
-  const defaultPitcher = "Charlie Morton";
+  const defaultPitcher = "Masahiro Tanaka";
   const [pitcher, setPitcher] = useState(defaultPitcher);
 
   const defaultState = {
@@ -57,11 +57,12 @@ function App(props) {
   const [indexes, setIndexes] = useState(defaultPitcherProfile.indexes)
   const [plateAppearances, setPlateAppearance] = useState(filterPlateAppearances(defaultPitcherProfile.indexes, props.allPA))
   const [isStateFilterOpened, setIsStateFilterOpened] = useState(true)
-  //state change
-  //state
+  const [typeset, setTypeset] = useState(defaultPitcherProfile.typeset)
+  //Init End
+  
   function handleStateUpdate(newState) {
     setState({ ...state, ...newState });
-
+    console.log('check ', isStateFilterOpened)
     //If StateFilter is Off, don't update indexes
     if(!isStateFilterOpened){
       return;
@@ -82,8 +83,10 @@ function App(props) {
         return props.allPA[i].state === `${newState.outs}=${newState.bases[0]}-${newState.bases[1]}-${newState.bases[2]}`
       })
     }
-      
     setIndexes(newIndexes)
+    let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
+    setPlateAppearance(newPlateAppearances)
+    setTypeset(getTypeset(newPlateAppearances))
   }
 
   function handlePitcherUpdate(pitcher){
@@ -95,21 +98,49 @@ function App(props) {
 
   function switchStateFilter(value){
     setIsStateFilterOpened(value)
-    setIndexes(pitcherProfile.indexes)
+    if(value){
+      let newIndexes = null
+      if(state.batter){
+        newIndexes = pitcherProfile.indexes.filter(i => {
+          return (
+            props.allPA[i].batter.name === state.batter 
+            &&
+            props.allPA[i].state === `${state.outs}=${state.bases[0]}-${state.bases[1]}-${state.bases[2]}` 
+          )
+        })
+      } else {
+        newIndexes = pitcherProfile.indexes.filter(i => {
+          return props.allPA[i].state === `${state.outs}=${state.bases[0]}-${state.bases[1]}-${state.bases[2]}`
+        })
+      }
+      setIndexes(newIndexes)
+      let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
+      setPlateAppearance(newPlateAppearances)
+      setTypeset(getTypeset(newPlateAppearances))
+    } else {
+      setIsStateFilterOpened(value)
+      setIndexes(pitcherProfile.indexes)
+      let newPlateAppearances = filterPlateAppearances(pitcherProfile.indexes, props.allPA)
+      setPlateAppearance(newPlateAppearances)
+      setTypeset(getTypeset(newPlateAppearances))
+    }
   }
-  //State Init End
+  
 
   useEffect(() => {
     console.log(pitcherProfile.name)
     console.log(state);
     console.log(indexes.length)
     console.log(isStateFilterOpened)
+    console.log(typeset)
+
   }, [state, pitcher, indexes, isStateFilterOpened]);
 
   return (
     <div id="main">
       <Filter
         pitcherProfile={pitcherProfile}
+        typeset={typeset}
         state={state}
         onStateUpdate={handleStateUpdate}
         onPitcherUpdate={handlePitcherUpdate}
@@ -161,9 +192,19 @@ getData().then(data => {
 }
 
 function filterPlateAppearances(indexes, allPA){
-  const pa = []
-  for (let i of indexes){
-    pa.push(allPA[i])
-  }
-  return pa
+  return indexes.map( i => {
+    return allPA[i]
+  })
+}
+
+function getTypeset(pa){
+  const flows = pa.map( _ => _.flow).flat()
+  const pitchTypes = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"]
+  const pitchTypeCountMap = new Map(pitchTypes.map(_ => [_, 0]))
+
+  flows.forEach(_ => {
+    const newCount = pitchTypeCountMap.get(_.typeCode) + 1;
+    pitchTypeCountMap.set(_.typeCode, newCount)
+  })
+  return pitchTypes.map(_ => [_, pitchTypeCountMap.get(_) / flows.length])
 }

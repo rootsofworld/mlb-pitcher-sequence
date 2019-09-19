@@ -7,7 +7,7 @@ function Filter(props) {
     <div className="sidebar">
       <PitcherFilter
         pitcher={props.pitcherProfile.name}
-        typeset={props.pitcherProfile.typeset}
+        typeset={props.typeset}
         onPitcherUpdate={props.onPitcherUpdate}
       />
       <StateFilter
