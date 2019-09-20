@@ -40,6 +40,9 @@ function App(props) {
     top: margin.top,
     left: margin.left
   };
+
+  let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
+  let pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchTypeOrder);
   //D3 Init End
 
   //State Init
@@ -73,7 +76,7 @@ function App(props) {
     if(newState.batter){
       newIndexes = pitcherProfile.indexes.filter(i => {
         return (
-          props.allPA[i].batter.name === newState.batter 
+          (props.allPA[i].batter.name === newState.batter || props.allPA[i].batter.side === newState.batter)
           &&
           props.allPA[i].state === `${newState.outs}=${newState.bases[0]}-${newState.bases[1]}-${newState.bases[2]}` 
         )
@@ -108,7 +111,7 @@ function App(props) {
       if(state.batter){
         newIndexes = pitcherProfile.indexes.filter(i => {
           return (
-            props.allPA[i].batter.name === state.batter 
+            (props.allPA[i].batter.name === state.batter || props.allPA[i].batter.side === state.batter)
             &&
             props.allPA[i].state === `${state.outs}=${state.bases[0]}-${state.bases[1]}-${state.bases[2]}` 
           )
@@ -144,7 +147,9 @@ function App(props) {
     <div id="main">
       <Filter
         pitcherProfile={pitcherProfile}
+        indexes={indexes}
         typeset={typeset}
+        typeColor={pitchColor}
         state={state}
         onStateUpdate={handleStateUpdate}
         onPitcherUpdate={handlePitcherUpdate}
@@ -204,7 +209,7 @@ function filterPlateAppearances(indexes, allPA){
 
 function getTypeset(pa){
   const flows = pa.map( _ => _.flow).flat()
-  const pitchTypes = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"]
+  const pitchTypes = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"]
   const pitchTypeCountMap = new Map(pitchTypes.map(_ => [_, 0]))
 
   flows.forEach(_ => {

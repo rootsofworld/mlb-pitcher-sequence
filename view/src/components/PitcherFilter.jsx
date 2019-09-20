@@ -5,15 +5,13 @@ import BarChart from './BarChart';
 
 function PitcherFilter(props) {
     let map = new Map(props.typeset)
-    let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
+    let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
     let pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
-    let pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchType);
     let scale = d3.scaleLinear().domain([0, 1]).range([6, 18]) 
 
     useEffect(() => {
         map = new Map(props.typeset)
         pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
-        pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchType);
         scale = d3.scaleLinear().domain([0, 1]).range([6, 18]) 
     }, [props.typeset])
 
@@ -34,6 +32,11 @@ function PitcherFilter(props) {
           />
         </div>
       </div>
+      <div className="s-field-container">
+        <span>
+          <span style={{fontSize: '6px'}}>PA Counts: {props.paCounts}</span>
+        </span>
+      </div>
       <div id="typelist" className="field-container">
         {/*<BubbleList 
             color={pitchColor}
@@ -44,7 +47,7 @@ function PitcherFilter(props) {
             margin={{top:20, left:25}}
             width={250}
             height={150}
-            color={pitchColor}
+            color={props.typeColor}
             typeset={pitchType}
         />
       </div>

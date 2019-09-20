@@ -12,11 +12,15 @@
   }
   
   .input-container, .field-container {
-    margin: 0 0 10px 0;
+    margin: 0 0 5px 0;
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-around;
     align-items: center;
+  }
+
+  .s-field-container {
+    margin: 0 0 5px 0;
   }
 
   .seperator {
@@ -29,7 +33,7 @@
     height: 100%;
     font-family: sans-serif;
     display: grid;
-    grid-template-columns: 30% 70%;
+    grid-template-columns: 20% 70%;
     grid-template-rows: 65% 35%;
     grid-column-gap: 15px;
     grid-row-gap: 20px;

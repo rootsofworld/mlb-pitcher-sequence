@@ -22,7 +22,7 @@ function BarChart(props){
                     //.ticks(3)
     let bandScale = d3.scaleBand()
                     .domain(props.typeset
-                        .filter(e => e[1] > 0)
+                        //.filter(e => e[1] > 0)
                         .sort((a, b) => d3.descending(a[1], b[1])).map(e => e[0])
                     )
                     .range([0, contentWidth])
@@ -32,12 +32,12 @@ function BarChart(props){
     useEffect(() => {
         bandScale = d3.scaleBand()
                     .domain(props.typeset
-                        .filter(e => e[1] > 0)
+                        //.filter(e => e[1] > 0)
                         .sort((a, b) => d3.descending(a[1], b[1])).map(e => e[0])
                     )
                     .range([0, contentWidth])
-                    .paddingInner(0.2)
-                    .paddingOuter(0.2)
+                    .paddingInner(0.1)
+                    .paddingOuter(0.1)
 
         const wrapper = d3.select(group.current)
         wrapper.select('g.barchart').remove()
