@@ -83,6 +83,7 @@ function App(props) {
         return props.allPA[i].state === `${newState.outs}=${newState.bases[0]}-${newState.bases[1]}-${newState.bases[2]}`
       })
     }
+
     setIndexes(newIndexes)
     let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
     setPlateAppearance(newPlateAppearances)
@@ -92,8 +93,12 @@ function App(props) {
   function handlePitcherUpdate(pitcher){
     setPitcher(pitcher)
     const newPitcherProfile = props.pitcherProfiles.find(pp => pp.name === pitcher)
+    const newIndexes = (newPitcherProfile) ? newPitcherProfile.indexes : []
     setPitcherProfile((newPitcherProfile) ? newPitcherProfile : {})
-    setIndexes((newPitcherProfile) ? newPitcherProfile.indexes : [])
+    setIndexes(newIndexes)
+    let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
+    setPlateAppearance(newPlateAppearances)
+    setTypeset(getTypeset(newPlateAppearances))
   }
 
   function switchStateFilter(value){
@@ -133,7 +138,6 @@ function App(props) {
     console.log(indexes.length)
     console.log(isStateFilterOpened)
     console.log(typeset)
-
   }, [state, pitcher, indexes, isStateFilterOpened]);
 
   return (
@@ -156,6 +160,7 @@ function App(props) {
             yScale={y}
             transform={margin}
             size={scatterSize}
+            updatePitcher={handlePitcherUpdate}
           />
           <XAxis scale={x} transform={xAxisTransform} />
           <YAxis scale={y} transform={yAxisTransform} />
@@ -163,7 +168,7 @@ function App(props) {
       </div>
       <div id="flowgraph">
         <div id="flowgraph-container"></div>
-        <div id="timeline-wrapper">
+        <div id="timeline-container">
           <Timeline pa={plateAppearances}/>
         </div>
       </div>

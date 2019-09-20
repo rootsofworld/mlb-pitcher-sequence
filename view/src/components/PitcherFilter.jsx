@@ -29,7 +29,7 @@ function PitcherFilter(props) {
           <input
             type="text"
             id="pitcher-name"
-            defaultValue={props.pitcher}
+            value={props.pitcher}
             onChange={e => handlePitcherUpdate(e)}
           />
         </div>

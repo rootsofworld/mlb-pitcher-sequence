@@ -12,23 +12,26 @@ function Scatter(props) {
         `translate(${props.transform.left}, ${props.transform.top})`
       )
       .selectAll("circle")
-      .data(props.data.map(d => d.coord))
+      .data(props.data)
 
     boundSet
       .enter()
       .append("g")
       .append("circle")
       .attr("class", "data-point")
-      .attr("cx", d => props.xScale(d[0]))
-      .attr("cy", d => props.yScale(d[1]))
-      .attr("r", 5)
+      .attr("cx", d => props.xScale(d.coord[0]))
+      .attr("cy", d => props.yScale(d.coord[1]))
+      .attr("r", 4)
       .attr('fill', 'orange')
       .attr("opacity", (d, i)=> {
         if(pitcher === props.data[i].name){
           return "1.0"
         } else {
-          return "0.1"
+          return "0.2"
         }
+      })
+      .on('click', function pitcherDotClicked(){
+        props.updatePitcher(this.__data__.name)
       })
     }, [props.pitcher]);
   return <g className="scatter" ref={group} />;
