@@ -7,6 +7,7 @@ import YAxis from "./components/yAxis";
 import Filter from "./components/Filter";
 import Timeline from "./components/Timeline";
 import "./style.css";
+import PitchFlow from "./components/PitchFlow";
 
 function App(props) {
   //D3 Init
@@ -46,7 +47,7 @@ function App(props) {
   //D3 Init End
 
   //State Init
-  const defaultPitcher = "Masahiro Tanaka";
+  const defaultPitcher = "Jacob deGrom";
   const [pitcher, setPitcher] = useState(defaultPitcher);
 
   const defaultState = {
@@ -134,7 +135,6 @@ function App(props) {
     }
   }
   
-
   useEffect(() => {
     console.log(pitcherProfile.name)
     console.log(state);
@@ -172,7 +172,9 @@ function App(props) {
         </svg>
       </div>
       <div id="flowgraph">
-        <div id="flowgraph-container"></div>
+        <div id="flowgraph-container">
+          <PitchFlow data={plateAppearances}/>
+        </div>
         <div id="timeline-container">
           <Timeline pa={plateAppearances}/>
         </div>

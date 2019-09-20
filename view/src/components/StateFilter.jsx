@@ -39,7 +39,7 @@ function StateFilter(props) {
           <input
             id="batter-name"
             type="text"
-            placeholder="Choose a batter"
+            placeholder="Batter's name or L/R"
             onChange={ handleBatterUpdate }
           />
         </div>
