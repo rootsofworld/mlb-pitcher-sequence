@@ -57,7 +57,7 @@ function StateFilter(props) {
         </span>
       </div>
       <Bases handler={ handleBasesUpdate } />
-      <div style={{height:10}}/>
+      <div className="seperator"/>
       <div className="field-container">
         <label htmlFor="all">StateFilter On/Off</label>
         <input type='checkbox' id="all" onChange={ stateFilterOnOff } defaultChecked={props.isFilterOn}/>

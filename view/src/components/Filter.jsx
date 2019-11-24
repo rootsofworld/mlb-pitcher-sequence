@@ -9,7 +9,6 @@ function Filter(props) {
         pitcher={props.pitcherProfile.name}
         paCounts={props.indexes.length}
         typeset={props.typeset}
-        typeColor={props.typeColor}
         onPitcherUpdate={props.onPitcherUpdate}
       />
       <StateFilter

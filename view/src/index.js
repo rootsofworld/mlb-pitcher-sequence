@@ -8,6 +8,7 @@ import Filter from "./components/Filter";
 import Timeline from "./components/Timeline";
 import "./style.css";
 import PitchFlow from "./components/PitchFlow";
+import PitchColorContext from "./contexts/PitchColorContext";
 
 function App(props) {
   //D3 Init
@@ -41,9 +42,6 @@ function App(props) {
     top: margin.top,
     left: margin.left
   };
-
-  let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
-  let pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchTypeOrder);
   //D3 Init End
 
   //State Init
@@ -62,6 +60,13 @@ function App(props) {
   const [plateAppearances, setPlateAppearance] = useState(filterPlateAppearances(defaultPitcherProfile.indexes, props.allPA))
   const [isStateFilterOpened, setIsStateFilterOpened] = useState(true)
   const [typeset, setTypeset] = useState(defaultPitcherProfile.typeset)
+  const _globalTimeSorted = props.allPA.map(_ => _.date).sort((a, b) => {
+    let dateA = new Date(a)
+    let dateB = new Date(b)
+    return dateA - dateB
+  })
+  const _globalTimeExtent = [_globalTimeSorted[0], _globalTimeSorted[_globalTimeSorted.length-1]]
+  console.log(_globalTimeExtent[0], _globalTimeExtent[1])
   //Init End
   
   function handleStateUpdate(newState) {
@@ -97,10 +102,10 @@ function App(props) {
   function handlePitcherUpdate(pitcher){
     setPitcher(pitcher)
     const newPitcherProfile = props.pitcherProfiles.find(pp => pp.name === pitcher)
-    const newIndexes = (newPitcherProfile) ? newPitcherProfile.indexes : []
     setPitcherProfile((newPitcherProfile) ? newPitcherProfile : {})
+    const newIndexes = (newPitcherProfile) ? newPitcherProfile.indexes : []
     setIndexes(newIndexes)
-    let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
+    const newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
     setPlateAppearance(newPlateAppearances)
     setTypeset(getTypeset(newPlateAppearances))
   }
@@ -136,51 +141,68 @@ function App(props) {
   }
   
   useEffect(() => {
+    //console.log(state);
+    console.log("Indexes Update: ", indexes.length)
+    //console.log(isStateFilterOpened)
+    console.log("Typeset Update: ", typeset)
     console.log(pitcherProfile.name)
-    console.log(state);
-    console.log(indexes.length)
-    console.log(isStateFilterOpened)
-    console.log(typeset)
-  }, [state, pitcher, indexes, isStateFilterOpened]);
+    console.log("PA Update: ", plateAppearances.length)
+  }, [state, pitcher, indexes, plateAppearances, typeset, isStateFilterOpened]);
+
+  //Set Context Value
+  const pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
+  const pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchTypeOrder);
 
   return (
-    <div id="main">
-      <Filter
-        pitcherProfile={pitcherProfile}
-        indexes={indexes}
-        typeset={typeset}
-        typeColor={pitchColor}
-        state={state}
-        onStateUpdate={handleStateUpdate}
-        onPitcherUpdate={handlePitcherUpdate}
-        onFilterSwitch={switchStateFilter}
-        isFilterOn={isStateFilterOpened}
-      />
-      <div id="tsne">
-        <svg width='100%' height='100%'>
-          <Scatter
-            pitcher={pitcher}
-            data={props.pitcherProfiles}
-            xScale={x}
-            yScale={y}
-            transform={margin}
-            size={scatterSize}
-            updatePitcher={handlePitcherUpdate}
+    <PitchColorContext.Provider value={pitchColor}>
+      <div id="main">
+          <Filter
+            pitcherProfile={pitcherProfile}
+            indexes={indexes}
+            typeset={typeset}
+            state={state}
+            onStateUpdate={handleStateUpdate}
+            onPitcherUpdate={handlePitcherUpdate}
+            onFilterSwitch={switchStateFilter}
+            isFilterOn={isStateFilterOpened}
           />
-          <XAxis scale={x} transform={xAxisTransform} />
-          <YAxis scale={y} transform={yAxisTransform} />
-        </svg>
-      </div>
-      <div id="flowgraph">
-        <div id="flowgraph-container">
-          <PitchFlow data={plateAppearances}/>
+        <div id="tsne">
+          <svg width='100%' height='100%'>
+            <Scatter
+              pitcher={pitcher}
+              data={props.pitcherProfiles}
+              xScale={x}
+              yScale={y}
+              transform={margin}
+              size={scatterSize}
+              updatePitcher={handlePitcherUpdate}
+            />
+            <XAxis scale={x} transform={xAxisTransform} />
+            <YAxis scale={y} transform={yAxisTransform} />
+          </svg>
         </div>
-        <div id="timeline-container">
-          <Timeline pa={plateAppearances}/>
+        <div id="flowgraph">
+          <div id="timeline-container">
+            <Timeline
+              width={1000}
+              height={150}
+              range={_globalTimeExtent}
+              pa={plateAppearances}
+            />
+          </div>
+          <div id="flowgraph-container">
+            <PitchFlow
+              data={plateAppearances}
+              width={1000}
+              height={400}
+              color={pitchColor}
+              typeset={typeset}
+            />
+          </div>
         </div>
+        <div id="pitch-seq"></div>
       </div>
-      <div id="pitch-seq"></div>
-    </div>
+    </PitchColorContext.Provider>
   );
 }
 
@@ -204,19 +226,23 @@ getData().then(data => {
 }
 
 function filterPlateAppearances(indexes, allPA){
-  return indexes.map( i => {
-    return allPA[i]
-  })
+  let result = []
+  for(let i=0; i < indexes.length; i++){
+    result.push(allPA[indexes[i]])
+  }
+  return result;
 }
 
 function getTypeset(pa){
   const flows = pa.map( _ => _.flow).flat()
-  const pitchTypes = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"]
+  //use all type for pitcher pitchtype barchart
+  const pitchTypes = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"]
   const pitchTypeCountMap = new Map(pitchTypes.map(_ => [_, 0]))
 
   flows.forEach(_ => {
     const newCount = pitchTypeCountMap.get(_.typeCode) + 1;
     pitchTypeCountMap.set(_.typeCode, newCount)
   })
+  console.log("AAAAAAAA ", pitchTypeCountMap)
   return pitchTypes.map(_ => [_, pitchTypeCountMap.get(_) / flows.length])
 }

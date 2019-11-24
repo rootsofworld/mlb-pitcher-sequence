@@ -1,9 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useContext} from "react";
 import * as d3 from 'd3';
 import BubbleList from './BubbleList';
 import BarChart from './BarChart';
+import PitchColorContext from "../contexts/PitchColorContext";
 
 function PitcherFilter(props) {
+    const color = useContext(PitchColorContext)
     let map = new Map(props.typeset)
     let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
     let pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
@@ -16,7 +18,7 @@ function PitcherFilter(props) {
     }, [props.typeset])
 
   function handlePitcherUpdate(evt) {
-    props.onPitcherUpdate(evt.target.value);
+      props.onPitcherUpdate(evt.target.value);
   }
 
   return (
@@ -47,7 +49,7 @@ function PitcherFilter(props) {
             margin={{top:20, left:25}}
             width={250}
             height={150}
-            color={props.typeColor}
+            color={color}
             typeset={pitchType}
         />
       </div>
