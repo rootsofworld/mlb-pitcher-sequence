@@ -20,7 +20,7 @@ app.get('/data/all-pa', (req, res) => {
     res.setHeader('Content-Encoding', 'gzip')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
-    let file = fs.createReadStream('./data/all_pa_2018.json')
+    let file = fs.createReadStream('./data/all_pa_2018_i.json')
     file.pipe(gzip).pipe(res)
 
     res.on('finish', () => {

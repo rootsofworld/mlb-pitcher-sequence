@@ -58,6 +58,7 @@ function App(props) {
   const [pitcherProfile, setPitcherProfile] = useState(defaultPitcherProfile)
   const [indexes, setIndexes] = useState(defaultPitcherProfile.indexes)
   const [plateAppearances, setPlateAppearance] = useState(filterPlateAppearances(defaultPitcherProfile.indexes, props.allPA))
+  const [timelineBrushedPA, setTimelineBrushedPA] = useState(null)
   const [isStateFilterOpened, setIsStateFilterOpened] = useState(true)
   const [typeset, setTypeset] = useState(defaultPitcherProfile.typeset)
   const _globalTimeSorted = props.allPA.map(_ => _.date).sort((a, b) => {
@@ -100,6 +101,7 @@ function App(props) {
   }
 
   function handlePitcherUpdate(pitcher){
+    setTimelineBrushedPA(null)
     setPitcher(pitcher)
     const newPitcherProfile = props.pitcherProfiles.find(pp => pp.name === pitcher)
     setPitcherProfile((newPitcherProfile) ? newPitcherProfile : {})
@@ -111,6 +113,7 @@ function App(props) {
   }
 
   function switchStateFilter(value){
+    setTimelineBrushedPA(null)
     setIsStateFilterOpened(value)
     if(value){
       let newIndexes = null
@@ -139,7 +142,15 @@ function App(props) {
       setTypeset(getTypeset(newPlateAppearances))
     }
   }
-  
+
+  function updateIndexes(newPA){
+    //console.log("OH!!!!!!", newIndexes)
+    //setIndexes(newIndexes)
+    //const newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
+    setTimelineBrushedPA(newPA)
+    setTypeset(getTypeset(newPA))
+  }
+
   useEffect(() => {
     //console.log(state);
     console.log("Indexes Update: ", indexes.length)
@@ -188,11 +199,13 @@ function App(props) {
               height={150}
               range={_globalTimeExtent}
               pa={plateAppearances}
+              update={updateIndexes}
             />
           </div>
           <div id="flowgraph-container">
             <PitchFlow
-              data={plateAppearances}
+              PAfromBrush={timelineBrushedPA}
+              PAfromState={plateAppearances}
               width={1000}
               height={400}
               color={pitchColor}
@@ -200,14 +213,15 @@ function App(props) {
             />
           </div>
         </div>
-        <div id="pitch-seq"></div>
+        <div id="pitch-seq">
+            
+        </div>
       </div>
     </PitchColorContext.Provider>
   );
 }
 
 getData().then(data => {
-    console.log(data[0][0])
     const rootElement = document.getElementById("root");
     ReactDOM.render(<App allPA={data[0]} pitcherProfiles={data[1]} />, rootElement);
   });
@@ -243,6 +257,6 @@ function getTypeset(pa){
     const newCount = pitchTypeCountMap.get(_.typeCode) + 1;
     pitchTypeCountMap.set(_.typeCode, newCount)
   })
-  console.log("AAAAAAAA ", pitchTypeCountMap)
+  //console.log("AAAAAAAA ", pitchTypeCountMap)
   return pitchTypes.map(_ => [_, pitchTypeCountMap.get(_) / flows.length])
 }
