@@ -124,7 +124,7 @@ function PitchFlow({
             }
         },
         //TODO: Find out why [data, typeset] will cause useMemo using new data but old typeset
-        [typeset]
+        [typeset, PAfromBrush]
     )
     
     

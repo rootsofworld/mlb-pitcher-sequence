@@ -67,7 +67,7 @@ function App(props) {
     return dateA - dateB
   })
   const _globalTimeExtent = [_globalTimeSorted[0], _globalTimeSorted[_globalTimeSorted.length-1]]
-  console.log(_globalTimeExtent[0], _globalTimeExtent[1])
+  //console.log(_globalTimeExtent[0], _globalTimeExtent[1])
   //Init End
   
   function handleStateUpdate(newState) {
@@ -167,6 +167,7 @@ function App(props) {
   return (
     <PitchColorContext.Provider value={pitchColor}>
       <div id="main">
+        <div className="sidebar">
           <Filter
             pitcherProfile={pitcherProfile}
             indexes={indexes}
@@ -177,6 +178,17 @@ function App(props) {
             onFilterSwitch={switchStateFilter}
             isFilterOn={isStateFilterOpened}
           />
+          <Timeline
+            width={240}
+            height={100}
+            range={_globalTimeExtent}
+            pa={plateAppearances}
+            update={updateIndexes}
+            state={state}
+          />
+          {/*<div id="timeline-container">
+          </div>*/}
+        </div>
         <div id="tsne">
           <svg width='100%' height='100%'>
             <Scatter
@@ -188,20 +200,11 @@ function App(props) {
               size={scatterSize}
               updatePitcher={handlePitcherUpdate}
             />
-            <XAxis scale={x} transform={xAxisTransform} />
-            <YAxis scale={y} transform={yAxisTransform} />
+            {/*<XAxis scale={x} transform={xAxisTransform} />
+            <YAxis scale={y} transform={yAxisTransform} />*/}
           </svg>
         </div>
         <div id="flowgraph">
-          <div id="timeline-container">
-            <Timeline
-              width={1000}
-              height={150}
-              range={_globalTimeExtent}
-              pa={plateAppearances}
-              update={updateIndexes}
-            />
-          </div>
           <div id="flowgraph-container">
             <PitchFlow
               PAfromBrush={timelineBrushedPA}

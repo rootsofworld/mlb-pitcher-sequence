@@ -4,7 +4,7 @@ import StateFilter from "./StateFilter";
 
 function Filter(props) {
   return (
-    <div className="sidebar">
+    <div className="filters">
       <PitcherFilter
         pitcher={props.pitcherProfile.name}
         paCounts={props.indexes.length}

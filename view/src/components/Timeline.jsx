@@ -5,7 +5,7 @@ import YAxis from './yAxis';
 
 function Timeline(props){
     const group = React.createRef()
-    let margin = {left: 25, top: 25}
+    let margin = {left: 15, top: 5}
     let dateRange = [ new Date(props.range[0]), new Date(props.range[1]) ]
 
 
@@ -22,8 +22,8 @@ function Timeline(props){
         const maxPACount = d3.max(Array.from(dateToPA.values()).map(_ => _.length))
         console.log(Array.from(dateToPA.entries()))
         //graph settings
-        const contentWidth = props.width * 0.95
-        const contentHeight = props.height - margin.top*2
+        const contentWidth = props.width * 0.8
+        const contentHeight = props.height * 0.7
         const x = d3.scaleTime()
                     .domain(dateRange)
                     .range([0, contentWidth])
@@ -33,10 +33,12 @@ function Timeline(props){
                     .range([contentHeight, 0])
         const axisX = d3.axisBottom(x)
                         //.tickValues(d3.timeDays(dateRange[0], dateRange[1], 15))
-                        .tickFormat(d3.timeFormat("%B %d"))
-                        .tickPadding(4)
-                        .tickSize(8)
+                        .tickFormat(d3.timeFormat("%b"))
+                        .tickPadding(2)
+                        .tickSize(1)
         const axisY = d3.axisLeft(y)
+                        .tickPadding(2)
+                        .tickSize(1)
                         //.tickValues(d3.timeDays(dateRange[0], dateRange[1], 15))
         const brush = d3.brushX()
                         .extent([[margin.left, margin.top], [margin.left + contentWidth, margin.top + contentHeight]])
@@ -64,23 +66,22 @@ function Timeline(props){
         const pointWithData = group.selectAll('.point')
             .data(Array.from(dateToPA.entries()))
                     
+            
+        pointWithData.exit().remove()
+        const line = pointWithData.enter()
+            .merge(group.select('.point'))
+            .append('rect')
+            .attr('class', 'point')
+            .attr('x', d => x(new Date(d[0])))
+            .attr('y', d => y(d[1].length))
+            .attr('width', 2.5)
+            .attr('fill', 'red')
+            .attr('opacity', '0.7')
+            .attr('height', d => contentHeight - y(d[1].length))
+            
         svg.append('g')
             .attr('class', 'brush') 
             .call(brush)
-            
-
-        pointWithData.exit().remove()
-        const line = pointWithData.enter()
-                    .merge(group.select('.point'))
-                    .append('rect')
-                    .attr('class', 'point')
-                    .attr('x', d => x(new Date(d[0])))
-                    .attr('y', d => y(d[1].length))
-                    .attr('width', 1.5)
-                    .attr('fill', 'red')
-                    .attr('opacity', '0.7')
-                    .attr('height', d => contentHeight - y(d[1].length))
-        
 
         function brushed(){
             let selected = []
@@ -98,7 +99,8 @@ function Timeline(props){
                 props.update(selected)
             }
         }
-    }, [props.pa, props.range])
+        console.log("TIMELINE RENDERING")
+    }, [props.state, props.pa])
     return (
         <svg className="timeline" viewBox={`0 0 ${props.width} ${props.height}`} ref={group}>
         </svg>
