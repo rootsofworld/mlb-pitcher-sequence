@@ -9,6 +9,7 @@ import Timeline from "./components/Timeline";
 import "./style.css";
 import PitchFlow from "./components/PitchFlow";
 import PitchColorContext from "./contexts/PitchColorContext";
+import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
 
 function App(props) {
   //D3 Init
@@ -157,7 +158,7 @@ function App(props) {
     //console.log(isStateFilterOpened)
     console.log("Typeset Update: ", typeset)
     console.log(pitcherProfile.name)
-    console.log("PA Update: ", plateAppearances.length)
+    console.log("PA Update: ", plateAppearances)
   }, [state, pitcher, indexes, plateAppearances, typeset, isStateFilterOpened]);
 
   //Set Context Value
@@ -203,21 +204,25 @@ function App(props) {
             {/*<XAxis scale={x} transform={xAxisTransform} />
             <YAxis scale={y} transform={yAxisTransform} />*/}
           </svg>
-        </div>
+        </div> 
         <div id="flowgraph">
           <div id="flowgraph-container">
-            <PitchFlow
+            {/*<PitchFlow
               PAfromBrush={timelineBrushedPA}
               PAfromState={plateAppearances}
               width={1000}
               height={400}
               color={pitchColor}
               typeset={typeset}
-            />
+            />*/}
           </div>
         </div>
         <div id="pitch-seq">
-            
+            <PitchSeqCardBoard
+              PAfromBrush={timelineBrushedPA}
+              PAfromState={plateAppearances}
+              typeset={typeset}
+            />
         </div>
       </div>
     </PitchColorContext.Provider>
