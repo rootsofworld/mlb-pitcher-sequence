@@ -168,6 +168,53 @@ function App(props) {
   return (
     <PitchColorContext.Provider value={pitchColor}>
       <div id="main">
+        <div id="tsne">
+          <select id="team">
+            <option>Arizona Diamondbacks</option>
+            <option>Atlanta Braves</option>
+            <option>Baltimore Orioles</option>
+            <option>Boston Red Sox</option>
+            <option>Chicago Cubs</option>
+            <option>Chicago White Sox</option>
+            <option>Cincinnati Reds</option>
+            <option>Cleveland Indians</option>
+            <option>Colorado Rockies</option>
+            <option>Detroit Tigers</option>
+            <option>Houston Astros</option>
+            <option>Kansas City Royals</option>
+            <option>Los Angeles Angels</option>
+            <option>Los Angeles Dodgers</option>
+            <option>Miami Marlins</option>
+            <option>Milwaukee Brewers</option>
+            <option>Minnesota Twins</option>
+            <option>New York Mets</option>
+            <option>New York Yankees</option>
+            <option>Oakland Athletics</option>
+            <option>Philadelphia Phillies</option>
+            <option>Pittsburgh Pirates</option>
+            <option>San Diego Padres</option>
+            <option>San Francisco Giants</option>
+            <option>Seattle Mariners</option>
+            <option>St. Louis Cardinals</option>
+            <option>Tampa Bay Rays</option>
+            <option>Texas Rangers</option>
+            <option>Toronto Blue Jays</option>
+            <option>Washington Nationals</option>
+          </select>
+          <svg width='100%' height='80%'>
+            <Scatter
+              pitcher={pitcher}
+              data={props.pitcherProfiles}
+              xScale={x}
+              yScale={y}
+              transform={margin}
+              size={scatterSize}
+              updatePitcher={handlePitcherUpdate}
+            />
+            {/*<XAxis scale={x} transform={xAxisTransform} />
+            <YAxis scale={y} transform={yAxisTransform} />*/}
+          </svg>
+        </div>
         <div className="sidebar">
           <Filter
             pitcherProfile={pitcherProfile}
@@ -190,32 +237,24 @@ function App(props) {
           {/*<div id="timeline-container">
           </div>*/}
         </div>
-        <div id="tsne">
-          <svg width='100%' height='100%'>
-            <Scatter
-              pitcher={pitcher}
-              data={props.pitcherProfiles}
-              xScale={x}
-              yScale={y}
-              transform={margin}
-              size={scatterSize}
-              updatePitcher={handlePitcherUpdate}
-            />
-            {/*<XAxis scale={x} transform={xAxisTransform} />
-            <YAxis scale={y} transform={yAxisTransform} />*/}
-          </svg>
-        </div> 
-        <div id="flowgraph">
+        <div className="game-list"></div>
+        <div className="pitcher-list"></div>
+        <div id="summary-graph">
+            <div >
+
+            </div>
+            {/*
           <div id="flowgraph-container">
-            {/*<PitchFlow
+            <PitchFlow
               PAfromBrush={timelineBrushedPA}
               PAfromState={plateAppearances}
               width={1000}
               height={400}
               color={pitchColor}
               typeset={typeset}
-            />*/}
+            />
           </div>
+            */}
         </div>
         <div id="pitch-seq">
             <PitchSeqCardBoard

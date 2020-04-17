@@ -17,7 +17,8 @@ export default function PitchSeqCard({
     width=50,//<= wrapper width * 1/4
     height=100,//wrapper height * 1/4
     pa,
-    typeset
+    typeset,
+    tooltip
 }){
     if(pa === undefined){
         return <div className='pitch-seq-card-empty'></div>
@@ -44,10 +45,6 @@ export default function PitchSeqCard({
                     .attr('height', height)
                     .attr('viewBox', `0 0 ${width} ${height}`)
 
-        var div = d3.select("body").append("div")	
-            .attr("class", "tooltip")				
-            .style("opacity", 0);
-
         const card = svg.append('g')
                         .attr('transfrom', `translate(${marginRL}, ${marginTop})`)
                         .attr('class', 'card-wrapper')
@@ -60,15 +57,15 @@ export default function PitchSeqCard({
                             .join('g')
                             .attr('class', 'pitch-in-card')
                             .on('mouseover', d => {
-                                div.transition()
+                                tooltip.transition()
                                     .duration(200)
                                     .style('opacity', 0.9)
-                                div.text(pa.batter.name + '-' + d.resultCode)
+                                tooltip.text(pa.batter.name + '-' + d.resultCode)
                                     .style('left', d3.event.pageX + 'px')
                                     .style('top', d3.event.pageY + 'px')
                             })
                             .on('mouseout', d => {
-                                div.transition()		
+                                tooltip.transition()		
                                     .duration(500)		
                                     .style("opacity", 0);	
                             })

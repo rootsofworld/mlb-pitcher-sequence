@@ -20,7 +20,7 @@ app.get('/data/all-pa', (req, res) => {
     res.setHeader('Content-Encoding', 'gzip')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
-    let file = fs.createReadStream('./data/all_pa_2018_i.json')
+    let file = fs.createReadStream('./data/all-pa-2018.json')
     file.pipe(gzip).pipe(res)
 
     res.on('finish', () => {
@@ -33,7 +33,7 @@ app.get('/data/pitcher-profile', (req, res) => {
     console.log('Data request received: /data/pitcher-profile')
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Origin', '*')
-    let file = fs.readFile('./data/pitcher-profile.json', (err, file) => {
+    let file = fs.readFile('./data/pitcher-profile-t.json', (err, file) => {
         if(err) throw err;
         res.send(file);
     })
