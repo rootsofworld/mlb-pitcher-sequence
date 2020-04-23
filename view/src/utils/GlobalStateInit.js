@@ -16,23 +16,32 @@ import * as d3 from 'd3';
  */
 export default function GlobalStateInit({
     colorScheme = d3.schemeCategory10,
-    pitcherProfile={name: "None", typeset: []}
+    pp={name: "None"},
+    ab=[],
+    ts=[],
+    pl=[]
 }){
     const pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
     return {
-        hasPitcherList : false,
-        isPitcherListBrushActive : false,
-        pitcherList : null,
+        hasPitcherList : true,
+        pitcherListMode: "team", //team, brush, ?knn
+        pitcherList : pl,
 
-        haveCurrentPitcher : false,
-        currentPitcher : pitcherProfile,
+        hasCurrentPitcher : false,
+        currentPitcher : pp,
+        atBats: ab,
+        filteredAtBats: [],
         
         isSituationSet : false,
-        situation : null,
+        situation : {
+            outs: 0,
+            bases: [0, 0, 0],
+            batter: ""
+        },
 
         dateRange: null,
-        atBatIndexes: null,
-        typeset: null,
+        atBatIndexes: null,//TODO: consider remove it.
+        typeset: ts,
         isGraphRendering : false,
         pitchColor: d3.scaleOrdinal(colorScheme).domain(pitchTypeOrder)
     }

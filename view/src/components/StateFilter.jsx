@@ -1,7 +1,7 @@
 import React from "react";
 import Bases from "./Bases";
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
-import {updateSituation} from '../utils/ActionMaker';
+import {updateSituation, resetSituation} from '../utils/ActionMaker';
 
 function StateFilter(props) {
   const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
@@ -14,7 +14,13 @@ function StateFilter(props) {
   };
 
   function handleBasesUpdate(evt) {
-    const basesMapping = indexBasesMap(globalState.situation.bases);
+    let currentBases;
+    if(globalState.situation === null){
+      currentBases = [0, 0, 0]
+    } else {
+      currentBases = globalState.situation.bases
+    }
+    const basesMapping = indexBasesMap(currentBases);
     basesMapping[evt.target.id] = !!basesMapping[evt.target.id] ? 0 : 1;
     //props.onStateUpdate({ ...props.state, bases: Object.values(basesMapping) });
     globalStateDispatcher(updateSituation({...globalState.situation, bases: Object.values(basesMapping)}))
@@ -33,8 +39,15 @@ function StateFilter(props) {
     globalStateDispatcher(updateSituation({...globalState.situation, batter: evt.target.value}))
   }
 
-  function stateFilterOnOff(evt){
-    props.onFilterSwitch(evt.target.checked)
+  function reset(evt){
+    globalStateDispatcher(resetSituation());
+    //Manually reset stateFilter's View
+    let bases = document.querySelectorAll('.base');
+    let outs = document.querySelector('#outs');
+    let batter = document.querySelector('#batter-name');
+    bases.forEach(_ => _.style.backgroundColor = "gray");
+    outs.value = 0;
+    batter.value = "";
   }
 
   return (
@@ -46,7 +59,7 @@ function StateFilter(props) {
               id="batter-name"
               type="text"
               placeholder="Batter's name or L/R"
-              onChange={ handleBatterUpdate }
+              onChange={ e => handleBatterUpdate(e) }
             />
           </span>
         </p>
@@ -56,18 +69,17 @@ function StateFilter(props) {
           <span style={{marginRight:'10px'}}>
             Outs:
           </span>
-          <select id="outs" defaultValue="0" onChange={ handleOutsUpdate }>
+          <select id="outs" defaultValue="0" onChange={ e =>  handleOutsUpdate(e) }>
             <option>0</option>
             <option>1</option>
             <option>2</option>
           </select>
         </span>
       </div>
-      <Bases handler={ handleBasesUpdate } />
+      <Bases handler={ e => handleBasesUpdate(e) } />
       <div className="seperator"/>
       <div className="switch">
-        <label htmlFor="all" style={{fontSize:"5px"}} >StateFilter On/Off: </label>
-        <input type='checkbox' id="all" onChange={ stateFilterOnOff } defaultChecked={props.isFilterOn}/>
+        <button id="all" onClick={ reset }>RESET SITUATION</button>
       </div>
     </div>
   );

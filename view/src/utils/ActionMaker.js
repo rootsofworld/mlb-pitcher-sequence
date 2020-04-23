@@ -12,6 +12,12 @@ export function updateSituation(newSituation){
     }
 }
 
+export function resetSituation(){
+    return {
+        type: "SITUATION_RESET"
+    }
+}
+
 export function updatePitcherListByBrush(){
 
 }
@@ -20,9 +26,10 @@ export function updatePitcherListByTeam(){
 
 }
 
-export function updateCurrentPitcher(pitcherProfile){
+export function updateCurrentPitcher(pitcherProfile, atBats){
     return {
         type: "CURRENT_PITCHER_UPDATE",
-        currentPitcher: pitcherProfile
+        currentPitcher: pitcherProfile,
+        atBats: atBats
     }
 }

@@ -3,16 +3,19 @@ import * as d3 from 'd3';
 //import BubbleList from './BubbleList';
 import BarChart from './BarChart';
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
+import AllAtBatsContext from '../context/AllAtBatsContext';
+import PitcherProfilesContext from '../context/PitcherProfilesContext';
 import {updateCurrentPitcher} from '../utils/ActionMaker';
 
-function PitcherFilter(props) {
-    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
-    const color = globalState.pitchColor
+function PitcherFilter() {
+    const pitcherProfiles = React.useContext(PitcherProfilesContext);
+    const allAtBats = React.useContext(AllAtBatsContext);
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
+    const color = globalState.pitchColor;
     let map = new Map(globalState.currentPitcher.typeset)
     let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
     let pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
     let scale = d3.scaleLinear().domain([0, 1]).range([6, 18])
-    const atbatCounts = (globalState.currentPitcher.indexes) ? globalState.currentPitcher.indexes.length : 0;
 
     useEffect(() => {
         map = new Map(globalState.currentPitcher.typeset)
@@ -22,7 +25,8 @@ function PitcherFilter(props) {
 
   function handlePitcherUpdate(evt) {
       //props.onPitcherUpdate(evt.target.value);
-      globalStateDispatcher(updateCurrentPitcher(evt.target.value))
+      const newPitcherProfile = pitcherProfiles.find(_ => _.name === evt.target.value);
+      globalStateDispatcher(updateCurrentPitcher(newPitcherProfile, newPitcherProfile.indexes.map(i => allAtBats[i])))
   }
 
   return (
@@ -41,7 +45,7 @@ function PitcherFilter(props) {
       </div>
       <div className="s-field-container">
         <span>
-          <span style={{fontSize: '6px'}}>PA Counts: {atbatCounts}</span>
+          <span style={{fontSize: '6px'}}>PA Counts: {globalState.filteredAtBats.length}</span>
         </span>
       </div>
       <div id="typelist" className="field-container">
@@ -55,7 +59,7 @@ function PitcherFilter(props) {
             width={250}
             height={150}
             color={color}
-            typeset={pitchType}
+            typeset={globalState.typeset}
         />
       </div>
       <div className="seperator"/>
