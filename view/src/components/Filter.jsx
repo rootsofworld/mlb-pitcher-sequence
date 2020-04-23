@@ -1,21 +1,23 @@
 import React from "react";
 import PitcherFilter from "./PitcherFilter";
 import StateFilter from "./StateFilter";
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
 
 function Filter(props) {
+  const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
   return (
     <div className="filters">
       <PitcherFilter
-        pitcher={props.pitcherProfile.name}
-        paCounts={props.indexes.length}
-        typeset={props.typeset}
-        onPitcherUpdate={props.onPitcherUpdate}
+        //pitcher={globalState.currentPitcher.name}
+        //paCounts={globalState.indexes.length}
+        //typeset={globalState.typeset}
+        //onPitcherUpdate={globalState.onPitcherUpdate}
       />
       <StateFilter
-        state={props.state}
-        onStateUpdate={props.onStateUpdate}
-        onFilterSwitch={props.onFilterSwitch}
-        isFilterOn={props.isFilterOn}
+        //state={globalState.situation}
+        //onStateUpdate={globalState.onStateUpdate}
+        //onFilterSwitch={globalState.onFilterSwitch}
+        //isFilterOn={globalState.isFilterOn}
       />
     </div>
   );

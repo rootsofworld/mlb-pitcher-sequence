@@ -1,12 +1,14 @@
 import * as d3 from "d3";
 import React, { useEffect, useContext } from "react";
-import PitchColorContext from "../contexts/PitchColorContext";
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
+import {updateCurrentPitcher} from '../utils/ActionMaker';
 
 function Scatter(props) {
   let group = React.createRef();
-  let color = useContext(PitchColorContext)
+  let [globalState, globalStateDispatcher] = useContext(GlobalUseReducerContext)
+  let color = globalState.pitchColor
   useEffect(() => {
-    const pitcher = props.pitcher
+    const pitcher = globalState.currentPitcher.name
     d3.select(group.current).selectAll('circle').remove()
     const boundSet = d3.select(group.current)
       .attr(
@@ -35,9 +37,11 @@ function Scatter(props) {
         }
       })
       .on('click', function pitcherDotClicked(){
-        props.updatePitcher(this.__data__.name)
+        // props.updatePitcher(this.__data__.name)
+        const newPitcherProfile = props.data.find(pp => pp.name === this.__data__.name)
+        globalStateDispatcher(updateCurrentPitcher(newPitcherProfile))
       })
-    }, [props.pitcher]);
+    }, [globalState]);
   return <g className="scatter" ref={group} />;
 }
 

@@ -1,17 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer} from "react";
 import ReactDOM from "react-dom";
 import * as d3 from "d3";
 import Scatter from "./components/Scatter";
 import XAxis from "./components/xAxis";
 import YAxis from "./components/yAxis";
-import Filter from "./components/Filter";
-import Timeline from "./components/Timeline";
 import "./style.css";
-import PitchFlow from "./components/PitchFlow";
-import PitchColorContext from "./contexts/PitchColorContext";
-import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
+import Filter from "./components/Filter";
+// import Timeline from "./components/Timeline";
+// import PitchFlow from "./components/PitchFlow";
+// import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
+import GlobalUseReducerContext from './context/GlobalUseReducerContext';
+import GlobalReducer from './reducer/GlobalReducer';
+import GlobalStateInit from './utils/GlobalStateInit';
+import * as ActionMaker from './utils/ActionMaker';
+
+
+
 
 function App(props) {
+  //State Init
+  const defaultPitcher = "Jacob deGrom";
+  const defaultPitcherProfile = props.pitcherProfiles.find(pp => pp.name === defaultPitcher)
+  const defaultState = {
+    outs: 0,
+    bases: [0, 0, 0],
+    batter: ""
+  };
+  const [globalState, globalStateDispatcher] = useReducer(GlobalReducer, {pitcherProfile: props.pitcherProfile}, GlobalStateInit)
   //D3 Init
   const svgWidth = 400,
     svgHeight = 400;
@@ -45,17 +60,9 @@ function App(props) {
   };
   //D3 Init End
 
-  //State Init
-  const defaultPitcher = "Jacob deGrom";
-  const [pitcher, setPitcher] = useState(defaultPitcher);
 
-  const defaultState = {
-    outs: 0,
-    bases: [0, 0, 0],
-    batter: ""
-  };
+  const [pitcher, setPitcher] = useState(defaultPitcher);
   const [state, setState] = useState(defaultState);
-  const defaultPitcherProfile = props.pitcherProfiles.find(pp => pp.name === defaultPitcher)
   const [pitcherProfile, setPitcherProfile] = useState(defaultPitcherProfile)
   const [indexes, setIndexes] = useState(defaultPitcherProfile.indexes)
   const [plateAppearances, setPlateAppearance] = useState(filterPlateAppearances(defaultPitcherProfile.indexes, props.allPA))
@@ -153,53 +160,55 @@ function App(props) {
   }
 
   useEffect(() => {
+    // Init pitcher and situation
+    globalStateDispatcher(ActionMaker.updateCurrentPitcher(defaultPitcherProfile))
+    globalStateDispatcher(ActionMaker.updateSituation(defaultState))
+    //
     //console.log(state);
     console.log("Indexes Update: ", indexes.length)
     //console.log(isStateFilterOpened)
     console.log("Typeset Update: ", typeset)
     console.log(pitcherProfile.name)
     console.log("PA Update: ", plateAppearances)
-  }, [state, pitcher, indexes, plateAppearances, typeset, isStateFilterOpened]);
-
-  //Set Context Value
-  const pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
-  const pitchColor = d3.scaleOrdinal(d3.schemeCategory10).domain(pitchTypeOrder);
+  }, [])
+  //[state, pitcher, indexes, plateAppearances, typeset, isStateFilterOpened]);
+  
 
   return (
-    <PitchColorContext.Provider value={pitchColor}>
+    <GlobalUseReducerContext.Provider value={[globalState, globalStateDispatcher]}>
       <div id="main">
         <div id="tsne">
-          <select id="team">
-            <option>Arizona Diamondbacks</option>
-            <option>Atlanta Braves</option>
-            <option>Baltimore Orioles</option>
-            <option>Boston Red Sox</option>
-            <option>Chicago Cubs</option>
-            <option>Chicago White Sox</option>
-            <option>Cincinnati Reds</option>
-            <option>Cleveland Indians</option>
-            <option>Colorado Rockies</option>
-            <option>Detroit Tigers</option>
-            <option>Houston Astros</option>
-            <option>Kansas City Royals</option>
-            <option>Los Angeles Angels</option>
-            <option>Los Angeles Dodgers</option>
-            <option>Miami Marlins</option>
-            <option>Milwaukee Brewers</option>
-            <option>Minnesota Twins</option>
-            <option>New York Mets</option>
-            <option>New York Yankees</option>
-            <option>Oakland Athletics</option>
-            <option>Philadelphia Phillies</option>
-            <option>Pittsburgh Pirates</option>
-            <option>San Diego Padres</option>
-            <option>San Francisco Giants</option>
-            <option>Seattle Mariners</option>
-            <option>St. Louis Cardinals</option>
-            <option>Tampa Bay Rays</option>
-            <option>Texas Rangers</option>
-            <option>Toronto Blue Jays</option>
-            <option>Washington Nationals</option>
+          <select id="team" defaultValue="Choose a Team">
+            <option value="Arizona Diamondbacks">Arizona Diamondbacks</option>
+            <option value="Atlanta Braves">Atlanta Braves</option>
+            <option value="Baltimore Orioles">Baltimore Orioles</option>
+            <option value="Boston Red Sox">Boston Red Sox</option>
+            <option value="Chicago Cubs">Chicago Cubs</option>
+            <option value="Chicago White Sox">Chicago White Sox</option>
+            <option value="Cincinnati Reds">Cincinnati Reds</option>
+            <option value="Cleveland Indians">Cleveland Indians</option>
+            <option value="Colorado Rockies">Colorado Rockies</option>
+            <option value="Detroit Tigers">Detroit Tigers</option>
+            <option value="Houston Astros">Houston Astros</option>
+            <option value="Kansas City Royals">Kansas City Royals</option>
+            <option value="Los Angeles Angels">Los Angeles Angels</option>
+            <option value="Los Angeles Dodgers">Los Angeles Dodgers</option>
+            <option value="Miami Marlins">Miami Marlins</option>
+            <option value="Milwaukee Brewers">Milwaukee Brewers</option>
+            <option value="Minnesota Twins">Minnesota Twins</option>
+            <option value="New York Mets">New York Mets</option>
+            <option value="New York Yankees">New York Yankees</option>
+            <option value="Oakland Athletics">Oakland Athletics</option>
+            <option value="Philadelphia Phillies">Philadelphia Phillies</option>
+            <option value="Pittsburgh Pirates">Pittsburgh Pirates</option>
+            <option value="San Diego Padres">San Diego Padres</option>
+            <option value="San Francisco Giants">San Francisco Giants</option>
+            <option value="Seattle Mariners">Seattle Mariners</option>
+            <option value="St. Louis Cardinals">St. Louis Cardinals</option>
+            <option value="Tampa Bay Rays">Tampa Bay Rays</option>
+            <option value="Texas Rangers">Texas Rangers</option>
+            <option value="Toronto Blue Jays">Toronto Blue Jays</option>
+            <option value="Washington Nationals">Washington Nationals</option>
           </select>
           <svg width='100%' height='80%'>
             <Scatter
@@ -209,23 +218,23 @@ function App(props) {
               yScale={y}
               transform={margin}
               size={scatterSize}
-              updatePitcher={handlePitcherUpdate}
+              //updatePitcher={handlePitcherUpdate}
             />
-            {/*<XAxis scale={x} transform={xAxisTransform} />
-            <YAxis scale={y} transform={yAxisTransform} />*/}
           </svg>
         </div>
         <div className="sidebar">
           <Filter
-            pitcherProfile={pitcherProfile}
-            indexes={indexes}
-            typeset={typeset}
-            state={state}
-            onStateUpdate={handleStateUpdate}
-            onPitcherUpdate={handlePitcherUpdate}
-            onFilterSwitch={switchStateFilter}
-            isFilterOn={isStateFilterOpened}
-          />
+            //pitcherProfile={pitcherProfile}
+            //indexes={indexes}
+            //typeset={typeset}
+            //state={state}
+            //onStateUpdate={handleStateUpdate}
+            //onPitcherUpdate={handlePitcherUpdate}
+            //onFilterSwitch={switchStateFilter}
+            //isFilterOn={isStateFilterOpened}
+            />
+        </div>
+        {/*
           <Timeline
             width={240}
             height={100}
@@ -234,16 +243,14 @@ function App(props) {
             update={updateIndexes}
             state={state}
           />
-          {/*<div id="timeline-container">
-          </div>*/}
         </div>
         <div className="game-list"></div>
         <div className="pitcher-list"></div>
         <div id="summary-graph">
-            <div >
+            <div>
 
             </div>
-            {/*
+            
           <div id="flowgraph-container">
             <PitchFlow
               PAfromBrush={timelineBrushedPA}
@@ -254,7 +261,7 @@ function App(props) {
               typeset={typeset}
             />
           </div>
-            */}
+           
         </div>
         <div id="pitch-seq">
             <PitchSeqCardBoard
@@ -263,8 +270,9 @@ function App(props) {
               typeset={typeset}
             />
         </div>
+        */}
       </div>
-    </PitchColorContext.Provider>
+    </GlobalUseReducerContext.Provider>
   );
 }
 
