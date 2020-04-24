@@ -31,12 +31,21 @@
     background-color: white;
     color: black;
   }
+    .outs-bases {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-around;
+      align-items: center;
+      width: 60%;
+    }
+
     .input-container, .field-container {
       margin: 0 0 0 0;
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-around;
       align-items: center;
+      width: 100%;
     }
 
     .s-field-container {

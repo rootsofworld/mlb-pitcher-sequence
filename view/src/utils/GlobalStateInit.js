@@ -33,10 +33,15 @@ export default function GlobalStateInit({
         filteredAtBats: [],
         
         isSituationSet : false,
+        filterSwitch: {
+            outs: false,
+            bases: false,
+            batter: false
+        },
         situation : {
-            outs: 0,
-            bases: [0, 0, 0],
-            batter: ""
+            outs: undefined,
+            bases: undefined,
+            batter: undefined
         },
 
         dateRange: null,

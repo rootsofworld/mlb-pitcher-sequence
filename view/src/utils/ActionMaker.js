@@ -1,3 +1,5 @@
+import { fstat } from "fs";
+
 /**
  * 
  * @typedef {Situation} newSituation
@@ -5,10 +7,11 @@
  * @prop {Array<Number>} bases [3B, 2B ,1B]
  * @prop {String} batter batter name
  */
-export function updateSituation(newSituation){
+export function updateSituation(newSituation, newFilterSwitch){
     return {
         type: "SITUATION_UPDATE",
-        situation: newSituation
+        situation: newSituation,
+        filterSwitch: newFilterSwitch
     }
 }
 
@@ -22,8 +25,12 @@ export function updatePitcherListByBrush(){
 
 }
 
-export function updatePitcherListByTeam(){
-
+export function updatePitcherListByTeam(team, pitcherList){
+    return {
+        type: "PITCHER_LIST_UPDATE_BY_TEAM",
+        team: team,
+        pitcherList: pitcherList
+    }
 }
 
 export function updateCurrentPitcher(pitcherProfile, atBats){

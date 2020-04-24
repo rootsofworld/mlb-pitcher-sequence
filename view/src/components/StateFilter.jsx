@@ -15,7 +15,7 @@ function StateFilter(props) {
 
   function handleBasesUpdate(evt) {
     let currentBases;
-    if(globalState.situation === null){
+    if(!globalState.situation.bases){
       currentBases = [0, 0, 0]
     } else {
       currentBases = globalState.situation.bases
@@ -23,7 +23,7 @@ function StateFilter(props) {
     const basesMapping = indexBasesMap(currentBases);
     basesMapping[evt.target.id] = !!basesMapping[evt.target.id] ? 0 : 1;
     //props.onStateUpdate({ ...props.state, bases: Object.values(basesMapping) });
-    globalStateDispatcher(updateSituation({...globalState.situation, bases: Object.values(basesMapping)}))
+    globalStateDispatcher(updateSituation({...globalState.situation, bases: Object.values(basesMapping)}, {...globalState.filterSwitch}))
     evt.target.style.backgroundColor = basesMapping[evt.target.id]
       ? "orange"
       : "gray";
@@ -31,12 +31,12 @@ function StateFilter(props) {
 
   function handleOutsUpdate(evt) {
     //props.onStateUpdate({ ...props.state, outs: Number(evt.target.value) });
-    globalStateDispatcher(updateSituation({...globalState.situation, outs: Number(evt.target.value)}))
+    globalStateDispatcher(updateSituation({...globalState.situation, outs: Number(evt.target.value)}, {...globalState.filterSwitch}))
   }
 
   function handleBatterUpdate(evt) {
     //props.onStateUpdate({ ...props.state, batter: evt.target.value });
-    globalStateDispatcher(updateSituation({...globalState.situation, batter: evt.target.value}))
+    globalStateDispatcher(updateSituation({...globalState.situation, batter: evt.target.value}, {...globalState.filterSwitch}))
   }
 
   function reset(evt){
@@ -48,6 +48,13 @@ function StateFilter(props) {
     bases.forEach(_ => _.style.backgroundColor = "gray");
     outs.value = 0;
     batter.value = "";
+  }
+
+  function switchUpdate(e){
+    const field = e.target.id.split('-')[0];
+    const newFilterSwitch = {...globalState.filterSwitch};
+    newFilterSwitch[field] = !newFilterSwitch[field];
+    globalStateDispatcher(updateSituation({...globalState.situation}, newFilterSwitch))
   }
 
   return (
@@ -65,21 +72,31 @@ function StateFilter(props) {
         </p>
       </div>
       <div className="field-container">
-        <span>
-          <span style={{marginRight:'10px'}}>
-            Outs:
-          </span>
-          <select id="outs" defaultValue="0" onChange={ e =>  handleOutsUpdate(e) }>
-            <option>0</option>
-            <option>1</option>
-            <option>2</option>
-          </select>
-        </span>
+        <div className="outs-bases">
+          <div>
+            <div>
+              <span>Outs:</span>
+              <span>
+                <select id="outs" defaultValue="0" onChange={ e => handleOutsUpdate(e) }>
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </span>
+            </div>
+          </div>
+          <Bases handler={ e => handleBasesUpdate(e) } />
+        </div>
       </div>
-      <Bases handler={ e => handleBasesUpdate(e) } />
       <div className="seperator"/>
       <div className="switch">
-        <button id="all" onClick={ reset }>RESET SITUATION</button>
+        <label htmlFor="batter-switch">Batter</label>
+        <input id="batter-switch" type="checkbox" onChange={(e) => switchUpdate(e)}/>
+        <label htmlFor="outs-switch">Outs</label>
+        <input id="outs-switch" type="checkbox" onChange={(e) => switchUpdate(e)}/>
+        <label htmlFor="bases-switch">Bases</label>
+        <input id="bases-switch" type="checkbox" onChange={(e) => switchUpdate(e)}/>
+        <button id="all" onClick={ reset }>RESET</button>
       </div>
     </div>
   );

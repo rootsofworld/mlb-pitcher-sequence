@@ -5,15 +5,24 @@ import PitcherProfilesContext from '../context/PitcherProfilesContext';
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
 import {updateCurrentPitcher} from '../utils/ActionMaker';
 
+function sortByString(a, b) {
+    if (a.typeset[0][0] < b.typeset[0][0]) {
+      return -1;
+    }
+    if (a.typeset[0][0] > b.typeset[0][0]) {
+      return 1;
+    }
+    return 0;
+  }
 
 export default function PitcherList(){
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
-    console.log(globalState.pitcherList)
+    console.log("PitchetList Render")
     return (
         <div className="pitcher-list-container">
             <header>Pitcher List By {globalState.pitcherListMode}</header>
             <div style={{overflow:"auto", height:"100%"}}>
-                {globalState.pitcherList.map((p, i) => <PitcherRow key={i} color={globalState.pitchColor(p.typeset[0][0])} name={p.name} side={p.side} dispatcher={globalStateDispatcher}/>)}
+                {globalState.pitcherList.sort(sortByString).map((p, i) => <PitcherRow key={i} color={globalState.pitchColor(p.typeset[0][0])} name={p.name} side={p.side} dispatcher={globalStateDispatcher}/>)}
             </div>
         </div>
     )
@@ -27,7 +36,8 @@ function PitcherRow({color, name, side, dispatcher}){
         width: "100%",
         display: "flex",
         justifyContent: "space-evenly",
-        margin: "0 0 5px"
+        margin: "0 0 5px",
+        backgroundColor: "white"
     }
 
     const typeStyle = {
@@ -50,13 +60,16 @@ function PitcherRow({color, name, side, dispatcher}){
         color: "orange"
     }
 
-    function getPitcher(name){
+    function getPitcher(e, name){
+        let allRow = document.querySelectorAll('.pitcher-list-row')
+        allRow.forEach(_ => { _.style.backgroundColor = "white"})
+        e.target.closest('div div').style.backgroundColor = "#EEEEEE";
         const newPitcherProfile = pitcherProfiles.find(pp => pp.name === name)
         dispatcher(updateCurrentPitcher(newPitcherProfile, newPitcherProfile.indexes.map(i => allAtBats[i])))
     }
 
     return (
-        <div onClick={() => getPitcher(name)} style={rowStyle}>
+        <div className="pitcher-list-row" onClick={(e) => getPitcher(e, name)} style={rowStyle}>
             <span className="pitcher-list-type" style={typeStyle}></span>
             <span className="pitcher-list-name" style={nameStyle}>{name}</span>
             <span className="pitcher-list-side" style={sideStyle}>{side}</span>

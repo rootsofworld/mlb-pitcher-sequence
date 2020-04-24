@@ -12,7 +12,12 @@ function Scatter(props) {
   let [globalState, globalStateDispatcher] = useContext(GlobalUseReducerContext)
   let color = globalState.pitchColor
   useEffect(() => {
-    const pitcher = globalState.currentPitcher.name
+    const pitcher = globalState.currentPitcher.id
+    const pitchers = globalState.pitcherList
+    let pitchersID = []
+    if(pitchers){
+      pitchersID = pitchers.map(_ => _.id)
+    }
     d3.select(group.current).selectAll('circle').remove()
     const boundSet = d3.select(group.current)
       .attr(
@@ -27,25 +32,35 @@ function Scatter(props) {
       .append("g")
       .append("circle")
       .attr("class", "data-point")
+      .attr("id", d => d.id)
       .attr("cx", d => props.xScale(d.coord[0]))
       .attr("cy", d => props.yScale(d.coord[1]))
-      .attr("r", 4)
+      .attr("r", (d, i) => {
+        if(pitcher === pitcherProfiles[i].id){
+          return 8;
+        } else {
+          return 4;
+        }
+      })
       .attr('fill', d => {
         return color(d.typeset[0][0])
       })
       .attr("opacity", (d, i)=> {
-        if(pitcher === pitcherProfiles[i].name){
-          return "1.0"
+        if(pitchersID.includes(pitcherProfiles[i].id)){
+            return "1.0"
+        // } else if(pitcher === pitcherProfiles[i].name){
+        //     return "1.0"
+        //if have default team, don't need this part
         } else {
-          return "0.2"
-        }
+            return "0.2"
+        }  
       })
-      .on('click', function pitcherDotClicked(){
-        // props.updatePitcher(this.__data__.name)
-        const newPitcherProfile = pitcherProfiles.find(pp => pp.name === this.__data__.name)
-        globalStateDispatcher(updateCurrentPitcher(newPitcherProfile, newPitcherProfile.indexes.map(i => allAtBats[i])))
-      })
-    }, [globalState]);
+      // .on('click', function pitcherDotClicked(){
+      //   // props.updatePitcher(this.__data__.name)
+      //   const newPitcherProfile = pitcherProfiles.find(pp => pp.name === this.__data__.name)
+      //   globalStateDispatcher(updateCurrentPitcher(newPitcherProfile, newPitcherProfile.indexes.map(i => allAtBats[i])))
+      // })
+    }, [globalState.pitcherList, globalState.currentPitcher]);
   return <g className="scatter" ref={group} />;
 }
 
