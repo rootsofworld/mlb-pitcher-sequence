@@ -21,7 +21,7 @@ export default function PitcherList(){
     return (
         <div className="pitcher-list-container">
             <header>Pitcher List By {globalState.pitcherListMode}</header>
-            <div style={{overflow:"auto", height:"100%"}}>
+            <div style={{overflow:"auto", height:"85%"}}>
                 {globalState.pitcherList.sort(sortByString).map((p, i) => <PitcherRow key={i} color={globalState.pitchColor(p.typeset[0][0])} name={p.name} side={p.side} dispatcher={globalStateDispatcher}/>)}
             </div>
         </div>

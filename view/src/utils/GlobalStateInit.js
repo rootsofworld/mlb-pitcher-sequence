@@ -19,7 +19,8 @@ export default function GlobalStateInit({
     pp={name: "None"},
     ab=[],
     ts=[],
-    pl=[]
+    pl=[],
+    adr=[Date('2018-1-1'), Date('2018-12-31')]
 }){
     const pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
     return {
@@ -31,6 +32,7 @@ export default function GlobalStateInit({
         currentPitcher : pp,
         atBats: ab,
         filteredAtBats: [],
+        dateFilteredAtBats: [],
         
         isSituationSet : false,
         filterSwitch: {
@@ -39,12 +41,12 @@ export default function GlobalStateInit({
             batter: false
         },
         situation : {
-            outs: undefined,
-            bases: undefined,
-            batter: undefined
+            outs: 0,
+            bases: [0, 0, 0],
+            batter: ""
         },
 
-        dateRange: null,
+        activeDateRange: adr,
         atBatIndexes: null,//TODO: consider remove it.
         typeset: ts,
         isGraphRendering : false,

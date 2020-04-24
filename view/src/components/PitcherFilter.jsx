@@ -45,7 +45,7 @@ function PitcherFilter() {
       </div>
       <div className="s-field-container">
         <span>
-          <span style={{fontSize: '6px'}}>PA Counts: {globalState.filteredAtBats.length}</span>
+          <span style={{fontSize: '6px'}}>PA Counts: {(globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats.length : globalState.atBats.length}</span>
         </span>
       </div>
       <div id="typelist" className="field-container">

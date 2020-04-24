@@ -23,6 +23,7 @@ function globalReducer(state, action){
             hasCurrentPitcher: true,
             currentPitcher: action.currentPitcher,
             atBats: action.atBats,
+            dateFilteredAtBats: action.atBats,
             typeset: action.currentPitcher.typeset,
             situation: {
                 outs: 0,
@@ -80,13 +81,21 @@ function globalReducer(state, action){
                 batter: false
             },
             situation: {
-                outs: undefined,
-                bases: undefined,
-                batter: undefined
+                outs: 0,
+                bases: [0, 0, 0],
+                batter: ""
             },
             isSituationSet: false
         })
     }
+    if(action.type === "TIMEBRUSH_UPDATE"){
+        console.log("Action: ", action.type)
+        //console.log("Action Data: ", action.pitcherList)
+        return Object.assign({}, state, {
+            filteredAtBats: action.atBats
+        })
+    }
+
 
     throw new Error("Some exception is happened")
   }

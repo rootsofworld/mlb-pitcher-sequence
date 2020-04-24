@@ -10,6 +10,7 @@ function getTypeSet(pa){
     })
     //console.log("AAAAAAAA ", pitchTypeCountMap)
     return pitchTypes.map(_ => [_, pitchTypeCountMap.get(_) / flows.length])
+    .filter(_ => _[1] > 0.001);
   }
 
 export default getTypeSet;

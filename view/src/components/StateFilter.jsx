@@ -14,19 +14,14 @@ function StateFilter(props) {
   };
 
   function handleBasesUpdate(evt) {
-    let currentBases;
-    if(!globalState.situation.bases){
-      currentBases = [0, 0, 0]
-    } else {
-      currentBases = globalState.situation.bases
-    }
+    let currentBases = globalState.situation.bases;
     const basesMapping = indexBasesMap(currentBases);
     basesMapping[evt.target.id] = !!basesMapping[evt.target.id] ? 0 : 1;
-    //props.onStateUpdate({ ...props.state, bases: Object.values(basesMapping) });
-    globalStateDispatcher(updateSituation({...globalState.situation, bases: Object.values(basesMapping)}, {...globalState.filterSwitch}))
     evt.target.style.backgroundColor = basesMapping[evt.target.id]
       ? "orange"
       : "gray";
+    //props.onStateUpdate({ ...props.state, bases: Object.values(basesMapping) });
+    globalStateDispatcher(updateSituation({...globalState.situation, bases: Object.values(basesMapping)}, {...globalState.filterSwitch}))
   }
 
   function handleOutsUpdate(evt) {
@@ -45,6 +40,12 @@ function StateFilter(props) {
     let bases = document.querySelectorAll('.base');
     let outs = document.querySelector('#outs');
     let batter = document.querySelector('#batter-name');
+    let basesSwitch = document.querySelector('#bases-switch')
+    let outsSwitch = document.querySelector('#outs-switch')
+    let batterSwitch = document.querySelector('#batter-switch')
+    basesSwitch.checked = false;
+    outsSwitch.checked = false;
+    batterSwitch.checked = false;
     bases.forEach(_ => _.style.backgroundColor = "gray");
     outs.value = 0;
     batter.value = "";
@@ -52,7 +53,7 @@ function StateFilter(props) {
 
   function switchUpdate(e){
     const field = e.target.id.split('-')[0];
-    const newFilterSwitch = {...globalState.filterSwitch};
+    const newFilterSwitch = Object.assign({}, globalState.filterSwitch);
     newFilterSwitch[field] = !newFilterSwitch[field];
     globalStateDispatcher(updateSituation({...globalState.situation}, newFilterSwitch))
   }

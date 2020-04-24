@@ -15,6 +15,13 @@ export function updateSituation(newSituation, newFilterSwitch){
     }
 }
 
+export function updateFromTimeBrush(newAtBats){
+    return {
+        type: "TIMEBRUSH_UPDATE",
+        atBats: newAtBats
+    }
+}
+
 export function resetSituation(){
     return {
         type: "SITUATION_RESET"

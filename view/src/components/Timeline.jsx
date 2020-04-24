@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react';
 import * as d3 from 'd3';
 import XAxis from './xAxis';
 import YAxis from './yAxis';
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
+import { updateSituation, updateFromTimeBrush } from '../utils/ActionMaker';
 
 function Timeline(props){
     const group = React.createRef()
     let margin = {left: 15, top: 5}
     let dateRange = [ new Date(props.range[0]), new Date(props.range[1]) ]
-
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
 
     useEffect(() => {
         //data settings
@@ -96,11 +98,12 @@ function Timeline(props){
                             selected = selected.concat(d[1])
                         }
                     })
-                props.update(selected)
+                //props.update(selected)
+                globalStateDispatcher(updateFromTimeBrush(selected))
             }
         }
         console.log("TIMELINE RENDERING")
-    }, [props.state, props.pa])
+    }, [props.pa])
     return (
         <svg className="timeline" viewBox={`0 0 ${props.width} ${props.height}`} ref={group}>
         </svg>

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useMemo, useRef, useContext} from 'react';
 import * as d3 from 'd3';
 import Zone from '../zone';
-import PitchColorContext from '../contexts/PitchColorContext.js'
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
 
 /*
 map pitch sequence to the little timeline
@@ -23,13 +23,14 @@ export default function PitchSeqCard({
     if(pa === undefined){
         return <div className='pitch-seq-card-empty'></div>
     }
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
     const marginTop = height * 0.2
     const marginRL = 5
     const marginBottom = height * 0.2
     width = pa.flow.length * cardSizeUnit + 20;
     const flow = pa.flow
     const container = useRef(null);
-    const color = useContext(PitchColorContext)
+    const color = globalState.pitchColor;
     const zoneScale = useMemo(() => new Zone(cardSizeUnit, height - marginTop - marginBottom, typeset), [])
     const xScale = d3.scaleLinear().domain([0, flow.length-1]).range([cardSizeUnit*0.5, width-cardSizeUnit*0.5-marginRL*2])
     const smallerScale = d3.scaleLinear().domain([60, 108]).range([0, 10])

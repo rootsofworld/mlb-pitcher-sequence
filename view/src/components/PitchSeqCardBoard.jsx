@@ -1,14 +1,16 @@
 import React, {useState, useEffect, useMemo, useRef} from 'react';
 import PitchSeqCard from './PitchSeqCard';
 import * as d3 from 'd3';
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
 
 export default function PitchSeqCardBoard({
     PAfromBrush=[],
     PAfromState=[],
     typeset=[]
 }){
-    console.log(PAfromState)
-    const paList = (PAfromBrush) ? PAfromBrush : PAfromState
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
+    //console.log(PAfromState)
+    const paList = (PAfromBrush) ? PAfromBrush : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
     console.log('palist', paList)
     let tooltip = d3.select("body").append("div")	
             .attr("class", "tooltip")				

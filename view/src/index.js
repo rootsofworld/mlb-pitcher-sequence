@@ -8,9 +8,10 @@ import getTypeSet from './utils/getTypeSet';
 import "./style.css";
 import Filter from "./components/Filter";
 import PitcherList from "./components/PitcherList";
+import GameList from "./components/GameList";
 import Timeline from "./components/Timeline";
 // import PitchFlow from "./components/PitchFlow";
-// import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
+import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
 import AllAtBatsContext from './context/AllAtBatsContext';
 import PitcherProfilesContext from './context/PitcherProfilesContext';
 import GlobalUseReducerContext from './context/GlobalUseReducerContext';
@@ -29,7 +30,13 @@ function App(props) {
     batter: ""
   };
   const defaultPitcherAtBats = defaultPitcherProfile.indexes.map(i => props.allPA[i]);
-  const [globalState, globalStateDispatcher] = useReducer(GlobalReducer, {pp: defaultPitcherProfile, ab: defaultPitcherAtBats, ts:getTypeSet(defaultPitcherAtBats), pl:getPitchersByTeam(props.pitcherProfiles, "Boston Red Sox")}, GlobalStateInit)
+  const _globalTimeSorted = props.allPA.map(_ => _.date).sort((a, b) => {
+    let dateA = new Date(a)
+    let dateB = new Date(b)
+    return dateA - dateB
+  })
+  const _globalTimeExtent = [_globalTimeSorted[0], _globalTimeSorted[_globalTimeSorted.length-1]]
+  const [globalState, globalStateDispatcher] = useReducer(GlobalReducer, {pp: defaultPitcherProfile, ab: defaultPitcherAtBats, ts:getTypeSet(defaultPitcherAtBats), adr: _globalTimeExtent, pl:getPitchersByTeam(props.pitcherProfiles, "Boston Red Sox")}, GlobalStateInit)
   //D3 Init
   const svgWidth = 400,
     svgHeight = 400;
@@ -72,12 +79,6 @@ function App(props) {
   //const [isStateFilterOpened, setIsStateFilterOpened] = useState(true)
   const [plateAppearances, setPlateAppearance] = useState(filterPlateAppearances(defaultPitcherProfile.indexes, props.allPA))
   const [timelineBrushedPA, setTimelineBrushedPA] = useState(null)
-  const _globalTimeSorted = props.allPA.map(_ => _.date).sort((a, b) => {
-    let dateA = new Date(a)
-    let dateB = new Date(b)
-    return dateA - dateB
-  })
-  const _globalTimeExtent = [_globalTimeSorted[0], _globalTimeSorted[_globalTimeSorted.length-1]]
   //console.log(_globalTimeExtent[0], _globalTimeExtent[1])
   //Init End
   
@@ -252,8 +253,8 @@ function App(props) {
                 //state={state}
                 />
             </div>
-            <div className="game-list-container"></div>
             <PitcherList/>
+            <GameList/>
                 {/*
             <div id="summary-graph">
                 <div>
@@ -272,14 +273,14 @@ function App(props) {
               </div>
               
             </div>
+          */}
             <div id="pitch-seq">
                 <PitchSeqCardBoard
                   PAfromBrush={timelineBrushedPA}
-                  PAfromState={plateAppearances}
-                  typeset={typeset}
+                  PAfromState={globalState.atBats}
+                  typeset={globalState.typeset}
                 />
             </div>
-            */}
           </div>
         </GlobalUseReducerContext.Provider>
       </PitcherProfilesContext.Provider>
