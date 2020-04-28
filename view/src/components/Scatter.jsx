@@ -12,7 +12,7 @@ function Scatter(props) {
   let [globalState, globalStateDispatcher] = useContext(GlobalUseReducerContext)
   let color = globalState.pitchColor
   useEffect(() => {
-    const pitcher = globalState.currentPitcher.id
+    const pitcher = (globalState.currentPitcher) ? globalState.currentPitcher.id : null;
     const pitchers = globalState.pitcherList
     let pitchersID = []
     if(pitchers){

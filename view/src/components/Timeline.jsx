@@ -103,7 +103,7 @@ function Timeline(props){
             }
         }
         console.log("TIMELINE RENDERING")
-    }, [props.pa])
+    }, [props.pa, globalState.resetSignal])
     return (
         <svg className="timeline" viewBox={`0 0 ${props.width} ${props.height}`} ref={group}>
         </svg>

@@ -10,6 +10,7 @@ import Filter from "./components/Filter";
 import PitcherList from "./components/PitcherList";
 import GameList from "./components/GameList";
 import Timeline from "./components/Timeline";
+import AtBatsConnector from "./components/AtBatsConnector";
 // import PitchFlow from "./components/PitchFlow";
 import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
 import AllAtBatsContext from './context/AllAtBatsContext';
@@ -47,8 +48,8 @@ function App(props) {
     right: 30
   };
   const scatterSize = {
-    width: 250,
-    height: 250
+    width: 200,
+    height: 200
   };
   const x = d3
     .scaleLinear()
@@ -70,99 +71,7 @@ function App(props) {
   };
   //D3 Init End
 
-  //TODO: Deprecated: clean up later
-  // const [pitcher, setPitcher] = useState(defaultPitcher);
-  // const [state, setState] = useState(defaultState);
-  // const [pitcherProfile, setPitcherProfile] = useState(defaultPitcherProfile)
-  // const [indexes, setIndexes] = useState(defaultPitcherProfile.indexes)
-  //const [typeset, setTypeset] = useState(defaultPitcherProfile.typeset)
-  //const [isStateFilterOpened, setIsStateFilterOpened] = useState(true)
-  const [plateAppearances, setPlateAppearance] = useState(filterPlateAppearances(defaultPitcherProfile.indexes, props.allPA))
-  const [timelineBrushedPA, setTimelineBrushedPA] = useState(null)
-  //console.log(_globalTimeExtent[0], _globalTimeExtent[1])
-  //Init End
   
-  //TODO: Deprecated: clean up later
-  // function handleStateUpdate(newState) {
-  //   setState({ ...state, ...newState });
-  //   console.log('check ', isStateFilterOpened)
-  //   //If StateFilter is Off, don't update indexes
-  //   if(!isStateFilterOpened){
-  //     return;
-  //   }
-
-  //   //update indexes
-  //   let newIndexes = null
-  //   if(newState.batter){
-  //     newIndexes = pitcherProfile.indexes.filter(i => {
-  //       return (
-  //         (props.allPA[i].batter.name === newState.batter || props.allPA[i].batter.side === newState.batter)
-  //         &&
-  //         props.allPA[i].state === `${newState.outs}=${newState.bases[0]}-${newState.bases[1]}-${newState.bases[2]}` 
-  //       )
-  //     })
-  //   } else {
-  //     newIndexes = pitcherProfile.indexes.filter(i => {
-  //       return props.allPA[i].state === `${newState.outs}=${newState.bases[0]}-${newState.bases[1]}-${newState.bases[2]}`
-  //     })
-  //   }
-
-  //   setIndexes(newIndexes)
-  //   let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
-  //   setPlateAppearance(newPlateAppearances)
-  //   setTypeset(getTypeSet(newPlateAppearances))
-  // }
-
-  // function handlePitcherUpdate(pitcher){
-  //   setTimelineBrushedPA(null)
-  //   setPitcher(pitcher)
-  //   const newPitcherProfile = props.pitcherProfiles.find(pp => pp.name === pitcher)
-  //   setPitcherProfile((newPitcherProfile) ? newPitcherProfile : {})
-  //   const newIndexes = (newPitcherProfile) ? newPitcherProfile.indexes : []
-  //   setIndexes(newIndexes)
-  //   const newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
-  //   setPlateAppearance(newPlateAppearances)
-  //   setTypeset(getTypeSet(newPlateAppearances))
-  // }
-
-  // function switchStateFilter(value){
-  //   setTimelineBrushedPA(null)
-  //   setIsStateFilterOpened(value)
-  //   if(value){
-  //     let newIndexes = null
-  //     if(state.batter){
-  //       newIndexes = pitcherProfile.indexes.filter(i => {
-  //         return (
-  //           (props.allPA[i].batter.name === state.batter || props.allPA[i].batter.side === state.batter)
-  //           &&
-  //           props.allPA[i].state === `${state.outs}=${state.bases[0]}-${state.bases[1]}-${state.bases[2]}` 
-  //         )
-  //       })
-  //     } else {
-  //       newIndexes = pitcherProfile.indexes.filter(i => {
-  //         return props.allPA[i].state === `${state.outs}=${state.bases[0]}-${state.bases[1]}-${state.bases[2]}`
-  //       })
-  //     }
-  //     setIndexes(newIndexes)
-  //     let newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
-  //     setPlateAppearance(newPlateAppearances)
-  //     setTypeset(getTypeSet(newPlateAppearances))
-  //   } else {
-  //     setIsStateFilterOpened(value)
-  //     setIndexes(pitcherProfile.indexes)
-  //     let newPlateAppearances = filterPlateAppearances(pitcherProfile.indexes, props.allPA)
-  //     setPlateAppearance(newPlateAppearances)
-  //     setTypeset(getTypeSet(newPlateAppearances))
-  //   }
-  // }
-  // function updateIndexes(newPA){
-  //   //console.log("OH!!!!!!", newIndexes)
-  //   //setIndexes(newIndexes)
-  //   //const newPlateAppearances = filterPlateAppearances(newIndexes, props.allPA)
-  //   setTimelineBrushedPA(newPA)
-  //   setTypeset(getTypeSet(newPA))
-  // }
-
   useEffect(() => {
     // Init pitcher and situation
     globalStateDispatcher(ActionMaker.updateCurrentPitcher(defaultPitcherProfile, defaultPitcherProfile.indexes.map(i => props.allPA[i])))
@@ -175,9 +84,7 @@ function App(props) {
     console.log(globalState.currentPitcher.name)
     console.log("PA Update: ", globalState.atBats)
   }, [])
-  //[state, pitcher, indexes, plateAppearances, typeset, isStateFilterOpened]);
   
-
   return (
     <AllAtBatsContext.Provider value={props.allPA}>
       <PitcherProfilesContext.Provider value={props.pitcherProfiles}>
@@ -223,44 +130,28 @@ function App(props) {
               </select>
               <svg width='100%' height='80%'>
                 <Scatter
-                  //pitcher={pitcher}
-                  //data={props.pitcherProfiles}
                   xScale={x}
                   yScale={y}
                   transform={margin}
                   size={scatterSize}
-                  //updatePitcher={handlePitcherUpdate}
                 />
               </svg>
             </div>
             <div className="sidebar">
-              <Filter
-                //pitcherProfile={pitcherProfile}
-                //indexes={indexes}
-                //typeset={typeset}
-                //state={state}
-                //onStateUpdate={handleStateUpdate}
-                //onPitcherUpdate={handlePitcherUpdate}
-                //onFilterSwitch={switchStateFilter}
-                //isFilterOn={isStateFilterOpened}
-                />
+              <Filter/>
               <Timeline
                 width={240}
                 height={100}
                 range={_globalTimeExtent}
                 pa={globalState.atBats}
-                //update={updateIndexes}
-                //state={state}
                 />
             </div>
             <PitcherList/>
             <GameList/>
-                {/*
             <div id="summary-graph">
-                <div>
-
-                </div>
+                <AtBatsConnector/>
                 
+                {/*
               <div id="flowgraph-container">
                 <PitchFlow
                   PAfromBrush={timelineBrushedPA}
@@ -271,12 +162,11 @@ function App(props) {
                   typeset={typeset}
                 />
               </div>
+            */}
               
             </div>
-          */}
             <div id="pitch-seq">
                 <PitchSeqCardBoard
-                  PAfromBrush={timelineBrushedPA}
                   PAfromState={globalState.atBats}
                   typeset={globalState.typeset}
                 />

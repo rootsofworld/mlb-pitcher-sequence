@@ -12,18 +12,24 @@ function globalReducer(state, action){
         return Object.assign({}, state, {
             havePitcherList: true,
             pitcherList: action.pitcherList,
-            hasCurrentPitcher: false
+            hasCurrentPitcher: false,
+            currentPitcher: undefined,
+            atBats: [],
+            filteredAtBats: [],
+            dateFilteredAtBats: [],
+            typeset: []
         })
     }
     if(action.type === "CURRENT_PITCHER_UPDATE"){
         console.log("Action: ", action.type)
         console.log("Action Data: ", action.currentPitcher)
-        console.log("Action Data: ", action.atBats)
+        //console.log("Action Data: ", action.atBats)
         return Object.assign({}, state, {
             hasCurrentPitcher: true,
             currentPitcher: action.currentPitcher,
             atBats: action.atBats,
-            dateFilteredAtBats: action.atBats,
+            dateFilteredAtBats: [],
+            filteredAtBats: [],
             typeset: action.currentPitcher.typeset,
             situation: {
                 outs: 0,
@@ -36,12 +42,12 @@ function globalReducer(state, action){
     if(action.type === "SITUATION_UPDATE"){
         console.log("Action: ", action.type)
         console.log("Action Data: ", action.situation)
-        console.log("Action Data: ", action.filterSwitch)
+        //console.log("Action Data: ", action.filterSwitch)
         if(!state.hasCurrentPitcher){
             return state;
         }
-
-        let newAtBats = state.atBats.filter(ab => {
+        let currentAtBats = (state.dateFilteredAtBats.length > 0) ? state.dateFilteredAtBats : state.atBats;
+        let newAtBats = currentAtBats.filter(ab => {
             const [outs, bases] = ab.state.split('=')
             if(action.filterSwitch.outs){
                 if(Number(outs) !== action.situation.outs){
@@ -60,12 +66,12 @@ function globalReducer(state, action){
             } 
             return true;
         });
-        console.log("Action Data: ", newAtBats)
-        console.log("Action Data: ", getTypeSet(newAtBats))
+        //console.log("Action Data: ", newAtBats)
+        //console.log("Action Data: ", getTypeSet(newAtBats))
         return Object.assign({}, state, {
             situation: action.situation,
             isSituationSet: true,
-            filteredAtBats: newAtBats,
+            dateFilteredAtBats: newAtBats,
             typeset: getTypeSet(newAtBats),
             filterSwitch: action.filterSwitch
         })
@@ -73,7 +79,7 @@ function globalReducer(state, action){
     if(action.type === "SITUATION_RESET"){
         console.log("Action: ", action.type)
         return Object.assign({}, state, {
-            filteredAtBats: state.atBats,
+            dateFilteredAtBats: state.atBats,
             typeset: getTypeSet(state.atBats),
             filterSwitch: {
                 outs: false,
@@ -85,14 +91,16 @@ function globalReducer(state, action){
                 bases: [0, 0, 0],
                 batter: ""
             },
-            isSituationSet: false
+            isSituationSet: false,
+            resetSignal: true
         })
     }
     if(action.type === "TIMEBRUSH_UPDATE"){
         console.log("Action: ", action.type)
         //console.log("Action Data: ", action.pitcherList)
         return Object.assign({}, state, {
-            filteredAtBats: action.atBats
+            dateFilteredAtBats: action.atBats,
+            resetSignal: false
         })
     }
 

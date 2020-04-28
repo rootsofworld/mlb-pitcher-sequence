@@ -43,6 +43,7 @@ function StateFilter(props) {
     let basesSwitch = document.querySelector('#bases-switch')
     let outsSwitch = document.querySelector('#outs-switch')
     let batterSwitch = document.querySelector('#batter-switch')
+    
     basesSwitch.checked = false;
     outsSwitch.checked = false;
     batterSwitch.checked = false;

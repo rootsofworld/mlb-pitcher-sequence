@@ -50,6 +50,7 @@ export default function GlobalStateInit({
         atBatIndexes: null,//TODO: consider remove it.
         typeset: ts,
         isGraphRendering : false,
+        resetSignal: false,
         pitchColor: d3.scaleOrdinal(colorScheme).domain(pitchTypeOrder)
     }
 }

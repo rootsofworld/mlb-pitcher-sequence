@@ -12,16 +12,16 @@ function PitcherFilter() {
     const allAtBats = React.useContext(AllAtBatsContext);
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
     const color = globalState.pitchColor;
-    let map = new Map(globalState.currentPitcher.typeset)
+    let map = new Map(globalState.typeset)
     let pitchTypeOrder = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
     let pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
     let scale = d3.scaleLinear().domain([0, 1]).range([6, 18])
 
     useEffect(() => {
-        map = new Map(globalState.currentPitcher.typeset)
+        map = new Map(globalState.typeset)
         pitchType = pitchTypeOrder.map(t => [t, map.get(t)]);
         scale = d3.scaleLinear().domain([0, 1]).range([6, 18]) 
-    }, [globalState.currentPitcher.typeset])
+    }, [globalState.typeset])
 
   function handlePitcherUpdate(evt) {
       //props.onPitcherUpdate(evt.target.value);
@@ -37,7 +37,7 @@ function PitcherFilter() {
             <input
               type="text"
               id="pitcher-name"
-              value={globalState.currentPitcher.name}
+              value={(globalState.currentPitcher) ? globalState.currentPitcher.name : ""}
               onChange={e => handlePitcherUpdate(e)}
             />
           </span>
@@ -45,7 +45,7 @@ function PitcherFilter() {
       </div>
       <div className="s-field-container">
         <span>
-          <span style={{fontSize: '6px'}}>PA Counts: {(globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats.length : globalState.atBats.length}</span>
+          <span style={{fontSize: '6px'}}>PA Counts: {(globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats.length : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats.length : globalState.atBats.length}</span>
         </span>
       </div>
       <div id="typelist" className="field-container">

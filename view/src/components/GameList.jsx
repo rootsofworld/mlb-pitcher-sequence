@@ -6,10 +6,10 @@ import {updateCurrentPitcher} from '../utils/ActionMaker';
 
 export default function GameList(){
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
-    let groupByGame = new Map()
-    let atbats = (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
-    console.log(atbats.length)
-    atbats.forEach(ab => {
+    let groupByGame = new Map();
+    let atBats = (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
+
+    atBats.forEach(ab => {
         if(!groupByGame.has(ab.gameID)){
             groupByGame.set(ab.gameID, [ab])
         } else {
