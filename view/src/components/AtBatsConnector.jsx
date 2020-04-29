@@ -10,9 +10,9 @@ export default function AtBatsConnector({
 }){
     const container = React.useRef(null);
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
-    const atBats = (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
-    const nodes = React.useMemo(() => makeNodes(atBats), [globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
-    const links = React.useMemo(() => makeLinks(atBats), [globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+    const atBats = (globalState.gameListAtBats.length > 0) ? globalState.gameListAtBats : (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
+    const nodes = React.useMemo(() => makeNodes(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+    const links = React.useMemo(() => makeLinks(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
 
     React.useEffect(() => {
         let simulation = d3.forceSimulation(nodes)
@@ -66,7 +66,7 @@ export default function AtBatsConnector({
             console.log('Simulation Stop')
             simulation.stop()
         }
-    },  [globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+    },  [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
     
     return (
         <div id="ABC-containter" ref={container}>

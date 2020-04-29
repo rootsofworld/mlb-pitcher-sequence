@@ -64,7 +64,7 @@ export default function PitchSeqCard({
                                     .style('opacity', 1)
                                 tooltip
                                     .style('background-color', 'white')
-                                    .style('width', '150px')
+                                    .style('width', '200px')
                                     .style('height', '100px')
                                     .style('left', d3.event.pageX + 'px')
                                     .style('top', d3.event.pageY + 'px')
@@ -162,7 +162,7 @@ export default function PitchSeqCard({
 
             //pitch speed chart
             card.append('g')
-                .attr('transform', `translate(${0},${height - marginBottom + 5})`)
+                .attr('transform', `translate(${0},${height - marginBottom + 2})`)
                 .append('path')
                     .attr('class', 'line')
                     .attr('d', line(flow))

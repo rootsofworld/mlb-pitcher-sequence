@@ -2,12 +2,13 @@ import React from 'react';
 import AllAtBatsContext from '../context/AllAtBatsContext';
 import PitcherProfilesContext from '../context/PitcherProfilesContext';
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
-import {updateCurrentPitcher} from '../utils/ActionMaker';
+import {updateCurrentPitcher, updateGameList} from '../utils/ActionMaker';
 
 export default function GameList(){
-    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
     let groupByGame = new Map();
     let atBats = (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
+    const [chosen, setChosen] = React.useState(null)
 
     atBats.forEach(ab => {
         if(!groupByGame.has(ab.gameID)){
@@ -37,21 +38,20 @@ export default function GameList(){
                 </div>
             </header>
             <div style={{overflow:"auto", height:"75%"}}>
-                {Array.from(groupByGame.values()).map(_ => <GameRow atbats={_}/>)}
+                {Array.from(groupByGame.values()).map(_ => <GameRow atbats={_} chosen={chosen} setChosen={setChosen}/>)}
             </div>
         </div>
     )
 }
 
-function GameRow({atbats}){
-    const pitcherProfiles = React.useContext(PitcherProfilesContext);
-    const allAtBats = React.useContext(AllAtBatsContext);
+function GameRow({atbats, chosen, setChosen}){
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
+    const [isChosen, setIsChosen] = React.useState(false)
 
     const rowStyle = {
-        width: "100%",
+        width: 'auto',
         height: "20px",
-        display: "flex",
-        justifyContent: "no-space",
+        display: "block",
         margin: "3px 0px",
         backgroundColor: "white"
     }
@@ -60,9 +60,30 @@ function GameRow({atbats}){
         return {
             backgroundColor: resultToColor(_.flow[_.flow.length-1]),
             height:"20px",
-            width:"20px",
+            width:"6px",
             margin:"0 0 0 2px",
-            opacity: "70%"
+            opacity: "70%",
+            display: 'inline-block'
+        }
+    }
+
+    function clickRow(e){
+        if(isChosen){
+            e.target.style.border = '0px';
+            globalStateDispatcher(updateGameList([]))
+            setIsChosen(false)
+            setChosen(null)
+        } else if(chosen){
+            chosen.style.border = '0px'
+            setChosen(e.target)
+            e.target.style.border = '1px solid steelblue';
+            globalStateDispatcher(updateGameList(atbats));
+            setIsChosen(true)
+        } else {
+            e.target.style.border = '1px solid steelblue';
+            globalStateDispatcher(updateGameList(atbats));
+            setIsChosen(true)
+            setChosen(e.target)
         }
     }
 
@@ -85,8 +106,8 @@ function GameRow({atbats}){
     }
 
     return (
-        <div className="game-list-row" style={rowStyle}>
-            {atbats.map(_ => <span style={barStyle(_)}/>)}
+        <div className="game-list-row" style={rowStyle} onClick={(e) => clickRow(e)}>
+            {atbats.map(_ => <div style={barStyle(_)}/>)}
         </div>
     )
 }

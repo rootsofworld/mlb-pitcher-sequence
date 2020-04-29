@@ -100,7 +100,16 @@ function globalReducer(state, action){
         //console.log("Action Data: ", action.pitcherList)
         return Object.assign({}, state, {
             dateFilteredAtBats: action.atBats,
-            resetSignal: false
+            gameListAtBats: [],
+            resetSignal: false,
+            typeset: getTypeSet(action.atBats)
+        })
+    }
+    if(action.type === "GAMELIST_UPDATE"){
+        console.log("Action: ", action.type)
+        console.log("Action Data: ", action.atBats)
+        return Object.assign({}, state, {
+            gameListAtBats: action.atBats
         })
     }
 

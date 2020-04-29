@@ -47,3 +47,10 @@ export function updateCurrentPitcher(pitcherProfile, atBats){
         atBats: atBats
     }
 }
+
+export function updateGameList(atbats){
+    return {
+        type: "GAMELIST_UPDATE",
+        atBats: atbats
+    }
+}
