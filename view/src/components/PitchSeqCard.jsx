@@ -15,7 +15,7 @@ export default function PitchSeqCard({
     //wrapperSize
     cardSizeUnit=40,
     width=50,//<= wrapper width * 1/4
-    height=100,//wrapper height * 1/4
+    height=130,//wrapper height * 1/4
     pa,
     typeset,
     tooltip
@@ -24,7 +24,7 @@ export default function PitchSeqCard({
         return <div className='pitch-seq-card-empty'></div>
     }
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
-    const marginTop = height * 0.2
+    const marginTop = 40
     const marginRL = 5
     const marginBottom = height * 0.2
     width = pa.flow.length * cardSizeUnit + 20;
@@ -57,38 +57,53 @@ export default function PitchSeqCard({
                             .data(flow)
                             .join('g')
                             .attr('class', 'pitch-in-card')
+                            .attr('transform', `translate(${0}, ${marginTop})`)
                             .on('mouseover', d => {
                                 tooltip.transition()
                                     .duration(200)
-                                    .style('opacity', 0.9)
-                                tooltip.text(pa.batter.name + '-' + d.resultCode)
+                                    .style('opacity', 1)
+                                tooltip
+                                    .style('background-color', 'white')
+                                    .style('width', '150px')
+                                    .style('height', '100px')
                                     .style('left', d3.event.pageX + 'px')
                                     .style('top', d3.event.pageY + 'px')
+                                    .append('p')
+                                        .text(pa.batter.name)
+                                    .append('p')
+                                        .text(d.resultCode)
+                                    .append('p')
+                                        .text('px: ' + d.px)
+                                    .append('p')
+                                        .text('pz: '+d.pz)
+                                    .append('p')
+                                        .text('speed: '+d.speed)
                             })
                             .on('mouseout', d => {
                                 tooltip.transition()		
                                     .duration(500)		
-                                    .style("opacity", 0);	
+                                    .style("opacity", 0);
+                                tooltip.selectAll('p').remove()
                             })
 
             cardUnits.append('rect')
                 .attr('x', (d, i) => i*cardSizeUnit)
                 .attr('width', zoneScale.xZoneScale(4))
                 .attr('height', zoneScale.yZoneScale(4))
-                .attr('stroke', (d,i) => (i === (flow.length-1)) ? 'white' : resultToColor(d))
+                .attr('stroke', d => resultToColor(d))
                 .attr('stroke-width', 1)
                 .attr('opacity', 1)
-                .attr('fill', (d,i) => (i === (flow.length-1)) ? resultToColor(d) : 'white')
+                .attr('fill', 'none')
 
             cardUnits.append('rect')
                 .attr('x', (d, i) => zoneScale.szTranslateX + i*cardSizeUnit)
                 .attr('y', zoneScale.szTranslateY)
                 .attr('width', zoneScale.szW)
                 .attr('height', zoneScale.szH)
-                .attr('stroke', (d,i) => (i === (flow.length-1)) ? 'white' : resultToColor(d))
+                .attr('stroke', d => resultToColor(d))
                 .attr('stroke-width', 1)
                 .attr('opacity', 1)
-                .attr('fill',  (d,i) => (i === (flow.length-1)) ? resultToColor(d) : 'white')
+                .attr('fill',  'none')
 
             cardUnits.append('circle')
                 .attr('cx', (d, i) => {
@@ -124,9 +139,30 @@ export default function PitchSeqCard({
                 .attr('height', '5px')
                 .attr('fill', d => color(d.typeCode))
 
+            cardUnits.append('text')
+                .text(d => d.count.join('-'))
+                .attr('font-size', 12)
+                .attr('transform', (d, i) => `translate(${10 + i*cardSizeUnit}, ${-5})`)
+            
+            card.append('g')
+                .append('text')
+                .text(pa.batter.name)
+                .attr('font-size', 14)
+                .attr('y', 20)
+
+            card.append('g')
+                //.attr('transform', `translate(${flow.length*cardSizeUnit}, ${height - marginTop - marginBottom}`)
+                .append('rect')
+                    .attr('x', flow.length*cardSizeUnit)
+                    .attr('y', 40)
+                    .attr('width', 10)
+                    .attr('height', 20)
+                    .attr('fill', resultToColor(flow[ flow.length-1 ]))
+                
+
             //pitch speed chart
             card.append('g')
-                .attr('transform', `translate(${0},${height-marginTop-marginBottom+10})`)
+                .attr('transform', `translate(${0},${height - marginBottom + 5})`)
                 .append('path')
                     .attr('class', 'line')
                     .attr('d', line(flow))

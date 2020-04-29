@@ -12,7 +12,7 @@ export default function PitchSeqCardBoard({
     //console.log(PAfromState)
     const paList = (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
     console.log('palist', paList)
-    let tooltip = d3.select("body").append("div")	
+    let tooltip = (document.querySelector(".tooltip")) ? d3.select(".tooltip") : d3.select("body").append("div")	
             .attr("class", "tooltip")				
             .style("opacity", 0)
 

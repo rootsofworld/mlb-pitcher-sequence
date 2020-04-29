@@ -21,7 +21,10 @@ export default function AtBatsConnector({
                 .id(_ => `${_.gameID}-${_.atbat_index}`)
             )
             .force('center', d3.forceCenter())
-            .on('tick', (s) => s)
+            .force("x", d3.forceX())
+            .force("y", d3.forceY())
+            .on('tick', (s) => s);
+
         let ctnr = d3.select(container.current)
         let svg = ctnr.select('svg')
             .attr('width', width)
@@ -33,6 +36,7 @@ export default function AtBatsConnector({
 
         svg.selectAll('g').remove()
         let node= svg.append('g')
+            .attr('transform', `translate(${width/2},${height/2})`)
             .attr('width', '600')
             .attr('height', '400')
                 .selectAll('circle')
@@ -77,7 +81,7 @@ function charge(){
 
 function makeNodes(abs){
     let nodes = abs.map(ab => {
-        ab.value = ab.flow.reduce((sum, v) => sum + v.speed, 0)
+        ab.value = ab.flow.length//reduce((sum, v) => sum + v.speed, 0)
         return ab;
     })
     return nodes;

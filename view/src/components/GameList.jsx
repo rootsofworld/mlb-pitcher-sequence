@@ -18,9 +18,24 @@ export default function GameList(){
     })
     console.log("GBG:", groupByGame)
     
+    const mark = (color) => {
+        return {
+            backgroundColor: color,
+            display: "inline-block",
+            width: '10px',
+            height: '10px'
+        }
+    }
+
     return (
         <div className="game-list-container">
-            <header>Game List</header>
+            <header>Game List&nbsp;&nbsp;&nbsp;&nbsp;
+                <div style={{display: "inline-block"}} >
+                    <span><div style={mark('gray')}></div>:Outs</span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span><div style={mark('orange')}></div>:No Out</span>
+                </div>
+            </header>
             <div style={{overflow:"auto", height:"75%"}}>
                 {Array.from(groupByGame.values()).map(_ => <GameRow atbats={_}/>)}
             </div>
@@ -40,29 +55,38 @@ function GameRow({atbats}){
         margin: "3px 0px",
         backgroundColor: "white"
     }
-    console.log(atbats)
+    
+    const barStyle = (_) => {
+        return {
+            backgroundColor: resultToColor(_.flow[_.flow.length-1]),
+            height:"20px",
+            width:"20px",
+            margin:"0 0 0 2px",
+            opacity: "70%"
+        }
+    }
 
     function resultToColor(d){
         switch(d.resultCode){
             case "SS":
             case "CS":
             case "F":
-                return "black";
+                return "gray";
             case "B":
-                return "red";
+                return "orange";
             case "IP":
-                return 'red';
+                return 'orange';
             case "IPO":
-                return "black";
+                return "gray";
             default:
-                return 'black';
+                return 'gray';
     
         }
     }
 
     return (
         <div className="game-list-row" style={rowStyle}>
-            {atbats.map(_ => <span style={{backgroundColor:resultToColor(_.flow[_.flow.length-1]),height:"100%",width:"5px", margin:"0 0 0 2px"}}/>)}
+            {atbats.map(_ => <span style={barStyle(_)}/>)}
         </div>
     )
 }
