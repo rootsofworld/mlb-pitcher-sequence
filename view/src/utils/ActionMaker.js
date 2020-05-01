@@ -54,3 +54,9 @@ export function updateGameList(atbats){
         atBats: atbats
     }
 }
+export function updateSPCard(card){
+    return {
+        type: "SPCARD_UPDATE",
+        spCard: card
+    }
+}

@@ -47,7 +47,7 @@ export default function GlobalStateInit({
             bases: [0, 0, 0],
             batter: ""
         },
-
+        spCard: null,
         activeDateRange: adr,
         atBatIndexes: null,//TODO: consider remove it.
         typeset: ts,

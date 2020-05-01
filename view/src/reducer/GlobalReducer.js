@@ -18,7 +18,8 @@ function globalReducer(state, action){
             filteredAtBats: [],
             dateFilteredAtBats: [],
             typeset: [],
-            winRate: ""
+            winRate: "",
+            spCard: null
         })
     }
     if(action.type === "CURRENT_PITCHER_UPDATE"){
@@ -38,7 +39,8 @@ function globalReducer(state, action){
                 batter: ""
             },
             isSituationSet: false,
-            winRate: getWinRate(action.atBats)
+            winRate: getWinRate(action.atBats),
+            spCard: null
         })
     }
     if(action.type === "SITUATION_UPDATE"){
@@ -76,7 +78,8 @@ function globalReducer(state, action){
             dateFilteredAtBats: newAtBats,
             typeset: getTypeSet(newAtBats),
             filterSwitch: action.filterSwitch,
-            winRate: getWinRate(newAtBats)
+            winRate: getWinRate(newAtBats),
+            spCard: null
         })
     }
     if(action.type === "SITUATION_RESET"){
@@ -96,7 +99,8 @@ function globalReducer(state, action){
             },
             isSituationSet: false,
             resetSignal: true,
-            winRate: getWinRate(state.atBats)
+            winRate: getWinRate(state.atBats),
+            spCard: null
         })
     }
     if(action.type === "TIMEBRUSH_UPDATE"){
@@ -107,7 +111,8 @@ function globalReducer(state, action){
             gameListAtBats: [],
             resetSignal: false,
             typeset: getTypeSet(action.atBats),
-            winRate: getWinRate(action.atBats)
+            winRate: getWinRate(action.atBats),
+            spCard: null
         })
     }
     if(action.type === "GAMELIST_UPDATE"){
@@ -115,7 +120,14 @@ function globalReducer(state, action){
         console.log("Action Data: ", action.atBats)
         return Object.assign({}, state, {
             gameListAtBats: action.atBats,
-            winRate: getWinRate(action.atBats)
+            winRate: getWinRate(action.atBats),
+            spCard: null
+        })
+    }
+    if(action.type === "SPCARD_UPDATE"){
+        console.log("Action: ", action.type)
+        return Object.assign({}, state, {
+            spCard: action.spCard
         })
     }
 

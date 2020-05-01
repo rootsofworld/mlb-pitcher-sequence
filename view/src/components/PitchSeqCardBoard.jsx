@@ -10,7 +10,12 @@ export default function PitchSeqCardBoard({
 }){
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
     //console.log(PAfromState)
-    const paList = (globalState.gameListAtBats.length > 0) ? globalState.gameListAtBats : (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
+    let paList;
+    if(globalState.spCard){
+        paList = [globalState.spCard]
+    } else {
+        paList = (globalState.gameListAtBats.length > 0) ? globalState.gameListAtBats : (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
+    }
     console.log('palist', paList)
     let tooltip = (document.querySelector(".tooltip")) ? d3.select(".tooltip") : d3.select("body").append("div")	
             .attr("class", "tooltip")				

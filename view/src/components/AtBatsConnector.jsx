@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import AllAtBatsContext from '../context/AllAtBatsContext';
 import PitcherProfilesContext from '../context/PitcherProfilesContext';
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
+import { updateSPCard } from '../utils/ActionMaker';
 
 export default function AtBatsConnector({
     width=800,
@@ -12,18 +13,27 @@ export default function AtBatsConnector({
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
     const atBats = (globalState.gameListAtBats.length > 0) ? globalState.gameListAtBats : (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
     console.log((globalState.gameListAtBats.length > 0) ? 'From gameListAtBats' : (globalState.dateFilteredAtBats.length > 0) ? 'From dateFilteredAtBats' : (globalState.filteredAtBats.length > 0) ? 'From filteredAtBats' : 'From atBats')
-    const nodes = React.useMemo(() => makeNodes(atBats), [globalState.gameListAtBats,   globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
-    const links = React.useMemo(() => makeLinks(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+    const nodes = React.useMemo(() => makeNodes(atBats), [globalState.gameListAtBats,   globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats]);
+    const links = React.useMemo(() => makeLinks(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats]);
+    const nodeSizeScale = React.useMemo(() => {
+        const flowLengthMap = atBats.map(_ => _.flow.length);
+        return d3.scaleLinear().domain(d3.extent(flowLengthMap)).range([5, 30])
+    }, [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+    const nodeRadius = React.useCallback((d) => {
+        return nodeSizeScale(d.flow.length);
+    }, [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+
 
     React.useEffect(() => {
         let simulation = d3.forceSimulation(nodes)
-            .force('charge', d3.forceManyBody().distanceMax(50).strength(-50))
+            .force('charge', d3.forceManyBody().distanceMax(100).strength(nodeCharge))
             .force('link', d3.forceLink(links)
                 .id(_ => `${_.gameID}-${_.atbat_index}`)
             )
             .force('center', d3.forceCenter())
             .force("x", d3.forceX())
             .force("y", d3.forceY())
+            .force('collision', d3.forceCollide().radius(nodeRadius))
             .on('tick', (s) => s);
 
         let ctnr = d3.select(container.current)
@@ -44,8 +54,9 @@ export default function AtBatsConnector({
                 .data(nodes)
                 .enter()
                 .append('circle')
-                    .attr('r', 5)
+                    .attr('r', d => nodeSizeScale(d.flow.length))
                     .attr('fill', d => globalState.pitchColor(d.flow[0].typeCode))
+                    .on('click', d => globalStateDispatcher(updateSPCard(d)))
 
         simulation.on("tick", () => {
             // link
@@ -76,8 +87,8 @@ export default function AtBatsConnector({
     )
 }
 
-function charge(){
-
+function nodeCharge(d){
+    return d.flow.length * d.flow.length * -0.25;
 }
 
 function makeNodes(abs){
