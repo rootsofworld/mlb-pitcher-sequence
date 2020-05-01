@@ -27,6 +27,7 @@ export default function GlobalStateInit({
         hasPitcherList : true,
         pitcherListMode: "team", //team, brush, ?knn
         pitcherList : pl,
+        winRate: "",
 
         hasCurrentPitcher : false,
         currentPitcher : pp,

@@ -11,7 +11,8 @@ export default function AtBatsConnector({
     const container = React.useRef(null);
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
     const atBats = (globalState.gameListAtBats.length > 0) ? globalState.gameListAtBats : (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
-    const nodes = React.useMemo(() => makeNodes(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+    console.log((globalState.gameListAtBats.length > 0) ? 'From gameListAtBats' : (globalState.dateFilteredAtBats.length > 0) ? 'From dateFilteredAtBats' : (globalState.filteredAtBats.length > 0) ? 'From filteredAtBats' : 'From atBats')
+    const nodes = React.useMemo(() => makeNodes(atBats), [globalState.gameListAtBats,   globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
     const links = React.useMemo(() => makeLinks(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
 
     React.useEffect(() => {

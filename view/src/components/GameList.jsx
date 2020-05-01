@@ -37,6 +37,7 @@ export default function GameList(){
                     <span><div style={mark('orange')}></div>:No Out</span>
                 </div>
             </header>
+            <div id="win-rate">{`Win Rate: ${globalState.winRate}%`}</div>
             <div style={{overflow:"auto", height:"75%"}}>
                 {Array.from(groupByGame.values()).map(_ => <GameRow atbats={_} chosen={chosen} setChosen={setChosen}/>)}
             </div>
@@ -69,21 +70,21 @@ function GameRow({atbats, chosen, setChosen}){
 
     function clickRow(e){
         if(isChosen){
-            e.target.style.border = '0px';
+            e.target.closest('.game-list-row').style.border = '0px';
             globalStateDispatcher(updateGameList([]))
             setIsChosen(false)
             setChosen(null)
         } else if(chosen){
             chosen.style.border = '0px'
-            setChosen(e.target)
-            e.target.style.border = '1px solid steelblue';
+            setChosen(e.target.closest('.game-list-row'))
+            e.target.closest('.game-list-row').style.border = '2px solid steelblue';
             globalStateDispatcher(updateGameList(atbats));
             setIsChosen(true)
         } else {
-            e.target.style.border = '1px solid steelblue';
+            e.target.closest('.game-list-row').style.border = '2px solid steelblue';
             globalStateDispatcher(updateGameList(atbats));
             setIsChosen(true)
-            setChosen(e.target)
+            setChosen(e.target.closest('.game-list-row'))
         }
     }
 

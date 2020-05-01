@@ -17,7 +17,8 @@ function globalReducer(state, action){
             atBats: [],
             filteredAtBats: [],
             dateFilteredAtBats: [],
-            typeset: []
+            typeset: [],
+            winRate: ""
         })
     }
     if(action.type === "CURRENT_PITCHER_UPDATE"){
@@ -36,7 +37,8 @@ function globalReducer(state, action){
                 bases: [0, 0, 0],
                 batter: ""
             },
-            isSituationSet: false
+            isSituationSet: false,
+            winRate: getWinRate(action.atBats)
         })
     }
     if(action.type === "SITUATION_UPDATE"){
@@ -73,7 +75,8 @@ function globalReducer(state, action){
             isSituationSet: true,
             dateFilteredAtBats: newAtBats,
             typeset: getTypeSet(newAtBats),
-            filterSwitch: action.filterSwitch
+            filterSwitch: action.filterSwitch,
+            winRate: getWinRate(newAtBats)
         })
     }
     if(action.type === "SITUATION_RESET"){
@@ -92,7 +95,8 @@ function globalReducer(state, action){
                 batter: ""
             },
             isSituationSet: false,
-            resetSignal: true
+            resetSignal: true,
+            winRate: getWinRate(state.atBats)
         })
     }
     if(action.type === "TIMEBRUSH_UPDATE"){
@@ -102,14 +106,16 @@ function globalReducer(state, action){
             dateFilteredAtBats: action.atBats,
             gameListAtBats: [],
             resetSignal: false,
-            typeset: getTypeSet(action.atBats)
+            typeset: getTypeSet(action.atBats),
+            winRate: getWinRate(action.atBats)
         })
     }
     if(action.type === "GAMELIST_UPDATE"){
         console.log("Action: ", action.type)
         console.log("Action Data: ", action.atBats)
         return Object.assign({}, state, {
-            gameListAtBats: action.atBats
+            gameListAtBats: action.atBats,
+            winRate: getWinRate(action.atBats)
         })
     }
 
@@ -117,4 +123,37 @@ function globalReducer(state, action){
     throw new Error("Some exception is happened")
   }
 
+function getWinRate(atbats){
+    let win = 0, lose = 0;
+    for(let a of atbats){
+        if(resultToWinLose(a.flow[a.flow.length - 1].resultCode)){
+            win++;
+        } else {
+            lose++;
+        }
+    }
+    return ((win / atbats.length) * 100).toFixed(0);
+}
+
+function resultToWinLose(d){
+    switch(d){
+        case "SS":
+        case "CS":
+        case "F":
+            return 1;
+        case "B":
+            return 0;
+        case "IP":
+            return 0;
+        case "IPO":
+            return 1;
+        case "HBP":
+            return 0;
+        default:
+            throw new Error(`Warning] some at-bat has neutral result: ${d}`);
+
+    }
+}
+
   export default globalReducer;
+
