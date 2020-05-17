@@ -19,6 +19,8 @@ import GlobalUseReducerContext from './context/GlobalUseReducerContext';
 import GlobalReducer from './reducer/GlobalReducer';
 import GlobalStateInit from './utils/GlobalStateInit';
 import * as ActionMaker from './utils/ActionMaker';
+import TransitionMatrix from "./utils/transitionMatrix";
+import Matrix from "./components/Matrix";
 
 
 function App(props) {
@@ -149,9 +151,18 @@ function App(props) {
             <PitcherList/>
             <GameList/>
             <div id="summary-graph">
+              <Matrix
+                data={TransitionMatrix('pitchtype', globalState.gameListAtBats.map(_ => _.flow.map(__ => __.typeCode)))}
+              />
+              <Matrix
+                data={TransitionMatrix('speed', globalState.gameListAtBats.map(_ => _.flow.map(__ => __.speed)))}
+              />
+              <Matrix
+                data={TransitionMatrix('position', globalState.gameListAtBats.map(_ => _.flow.map(__ => __.area)))}
+              />
+                {/*
                 <AtBatsConnector/>
                 
-                {/*
               <div id="flowgraph-container">
                 <PitchFlow
                   PAfromBrush={timelineBrushedPA}

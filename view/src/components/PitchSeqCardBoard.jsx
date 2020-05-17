@@ -27,7 +27,7 @@ export default function PitchSeqCardBoard({
         return (
             <div id='pitch-seq-cardboard'>
                 {
-                    paList.map((p, i) => <PitchSeqCard key={i} pa={p} typeset={typeset} tooltip={tooltip}/>)
+                    paList.map((p, i) => <PitchSeqCard key={i} pa={p} typeset={typeset} tooltip={tooltip}/>) //<GameTable/>
                     //<PitchSeqCard pa={paList[0]} typeset={typeset}/>
                 }
             </div>

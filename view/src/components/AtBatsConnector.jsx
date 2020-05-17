@@ -13,12 +13,15 @@ export default function AtBatsConnector({
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
     const atBats = (globalState.gameListAtBats.length > 0) ? globalState.gameListAtBats : (globalState.dateFilteredAtBats.length > 0) ? globalState.dateFilteredAtBats : (globalState.filteredAtBats.length > 0) ? globalState.filteredAtBats : globalState.atBats;
     console.log((globalState.gameListAtBats.length > 0) ? 'From gameListAtBats' : (globalState.dateFilteredAtBats.length > 0) ? 'From dateFilteredAtBats' : (globalState.filteredAtBats.length > 0) ? 'From filteredAtBats' : 'From atBats')
+    
     const nodes = React.useMemo(() => makeNodes(atBats), [globalState.gameListAtBats,   globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats]);
     const links = React.useMemo(() => makeLinks(atBats), [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats]);
+   
     const nodeSizeScale = React.useMemo(() => {
         const flowLengthMap = atBats.map(_ => _.flow.length);
-        return d3.scaleLinear().domain(d3.extent(flowLengthMap)).range([5, 30])
+        return d3.scaleLinear().domain(d3.extent(flowLengthMap)).range([5, 20])
     }, [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
+
     const nodeRadius = React.useCallback((d) => {
         return nodeSizeScale(d.flow.length);
     }, [globalState.gameListAtBats, globalState.dateFilteredAtBats, globalState.filteredAtBats, globalState.atBats])
@@ -26,7 +29,7 @@ export default function AtBatsConnector({
 
     React.useEffect(() => {
         let simulation = d3.forceSimulation(nodes)
-            .force('charge', d3.forceManyBody().distanceMax(100).strength(nodeCharge))
+            .force('charge', d3.forceManyBody().strength(nodeCharge))
             .force('link', d3.forceLink(links)
                 .id(_ => `${_.gameID}-${_.atbat_index}`)
             )
@@ -57,6 +60,17 @@ export default function AtBatsConnector({
                     .attr('r', d => nodeSizeScale(d.flow.length))
                     .attr('fill', d => globalState.pitchColor(d.flow[0].typeCode))
                     .on('click', d => globalStateDispatcher(updateSPCard(d)))
+        
+        // let link = svg.append('g')
+        //     .attr('transform', `translate(${width/2},${height/2})`)
+        //     .attr('width', '600')
+        //     .attr('height', '400')
+        //         .selectAll('path')
+        //         .data(links)
+        //         .enter()
+        //         .append('path')
+        //             .attr('r', d => nodeSizeScale(d.flow.length))
+        //             .attr('stroke', 'gray')
 
         simulation.on("tick", () => {
             // link
@@ -88,7 +102,7 @@ export default function AtBatsConnector({
 }
 
 function nodeCharge(d){
-    return d.flow.length * d.flow.length * -0.25;
+    return d.flow.length * d.flow.length * -1;
 }
 
 function makeNodes(abs){
