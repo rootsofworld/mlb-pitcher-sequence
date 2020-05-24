@@ -2,8 +2,20 @@ import getTypeSet from '../utils/getTypeSet';
 
 function globalReducer(state, action){
     if(action.type === "PITCHER_LIST_UPDATE_BY_BRUSH"){
+        console.log("Action: ", action.type)
+        console.log("Action Data: ", action.pitcherList)
         return Object.assign({}, state, {
-            pitcherList: action.pitcherList
+            havePitcherList: true,
+            pitcherList: action.pitcherList,
+            pitcherListMode: "BRUSH",
+            hasCurrentPitcher: false,
+            currentPitcher: undefined,
+            atBats: [],
+            filteredAtBats: [],
+            dateFilteredAtBats: [],
+            typeset: [],
+            winRate: "",
+            spCard: null
         })
     }
     if(action.type === "PITCHER_LIST_UPDATE_BY_TEAM"){
@@ -12,6 +24,7 @@ function globalReducer(state, action){
         return Object.assign({}, state, {
             havePitcherList: true,
             pitcherList: action.pitcherList,
+            pitcherListMode: "TEAM",
             hasCurrentPitcher: false,
             currentPitcher: undefined,
             atBats: [],

@@ -17,7 +17,7 @@ function sortByString(a, b) {
 
 export default function PitcherList(){
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
-    console.log("PitchetList Render")
+    console.log("[PitchetList Render]")
     return (
         <div className="pitcher-list-container">
             <header>Pitcher List By {globalState.pitcherListMode}</header>

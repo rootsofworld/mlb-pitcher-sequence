@@ -28,8 +28,11 @@ export function resetSituation(){
     }
 }
 
-export function updatePitcherListByBrush(){
-
+export function updatePitcherListByBrush(pitcherList){
+    return {
+        type: "PITCHER_LIST_UPDATE_BY_BRUSH",
+        pitcherList: pitcherList
+    }
 }
 
 export function updatePitcherListByTeam(team, pitcherList){

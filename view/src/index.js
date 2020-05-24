@@ -41,36 +41,36 @@ function App(props) {
   const _globalTimeExtent = [_globalTimeSorted[0], _globalTimeSorted[_globalTimeSorted.length-1]]
   const [globalState, globalStateDispatcher] = useReducer(GlobalReducer, {pp: defaultPitcherProfile, ab: defaultPitcherAtBats, ts:getTypeSet(defaultPitcherAtBats), adr: _globalTimeExtent, pl:getPitchersByTeam(props.pitcherProfiles, "Boston Red Sox")}, GlobalStateInit)
   //D3 Init
-  const svgWidth = 400,
-    svgHeight = 400;
-  const margin = {
-    top: 30,
-    left: 30,
-    bottom: 30,
-    right: 30
-  };
-  const scatterSize = {
-    width: 200,
-    height: 200
-  };
-  const x = d3
-    .scaleLinear()
-    .domain(d3.extent(props.pitcherProfiles, d => d.coord[0]))
-    .range([0, scatterSize.width]);
-  const y = d3
-    .scaleLinear()
-    .domain(d3.extent(props.pitcherProfiles, d => d.coord[1]))
-    .range([scatterSize.height, 0]);
+  // const svgWidth = 400,
+  //   svgHeight = 400;
+  // const margin = {
+  //   top: 30,
+  //   left: 30,
+  //   bottom: 30,
+  //   right: 30
+  // };
+  // const scatterSize = {
+  //   width: 200,
+  //   height: 200
+  // };
+  // const x = d3
+  //   .scaleLinear()
+  //   .domain(d3.extent(props.pitcherProfiles, d => d.coord[0]))
+  //   .range([0, scatterSize.width]);
+  // const y = d3
+  //   .scaleLinear()
+  //   .domain(d3.extent(props.pitcherProfiles, d => d.coord[1]))
+  //   .range([scatterSize.height, 0]);
 
-  const xAxisTransform = {
-    top: margin.top + scatterSize.height,
-    left: margin.left
-  };
+  // const xAxisTransform = {
+  //   top: margin.top + scatterSize.height,
+  //   left: margin.left
+  // };
 
-  const yAxisTransform = {
-    top: margin.top,
-    left: margin.left
-  };
+  // const yAxisTransform = {
+  //   top: margin.top,
+  //   left: margin.left
+  // };
   //D3 Init End
 
   
@@ -130,14 +130,11 @@ function App(props) {
                 <option value="Toronto Blue Jays">Toronto Blue Jays</option>
                 <option value="Washington Nationals">Washington Nationals</option>
               </select>
-              <svg width='100%' height='80%'>
-                <Scatter
-                  xScale={x}
-                  yScale={y}
-                  transform={margin}
-                  size={scatterSize}
-                />
-              </svg>
+              <Scatter
+                width={300}
+                height={300}
+                pitcherProfiles={props.pitcherProfiles}
+              />
             </div>
             <div className="sidebar">
               <Filter/>

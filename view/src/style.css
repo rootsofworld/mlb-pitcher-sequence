@@ -15,8 +15,8 @@
     height: 100%;
     font-family: sans-serif;
     display: grid;
-    grid-template-columns: 400px 300px 600px;
-    grid-template-rows: 300px 200px 200px;
+    grid-template-columns: 500px 300px 600px;
+    grid-template-rows: 400px 200px 200px;
     grid-column-gap: 10px;
     grid-row-gap: 10px;
     justify-content: center;
