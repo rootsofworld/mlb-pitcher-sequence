@@ -85,7 +85,7 @@ function speedToRange(s){
         } else if(s >= 100){
             return '100up';
         } else {
-            console.log(s)
+            console.log("Weird Speed: ", s)
             throw new Error(`Outlier Pitch Speed Found!!!`);
         }
 }

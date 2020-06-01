@@ -1,12 +1,25 @@
 import React from 'react';
 import * as d3 from 'd3';
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
+import TransitionMatrix from "../utils/transitionMatrix";
 
 export default function Matrix({
     width=300,
     height=300,
-    data = []
+    data = [],
+    datatype = ""
 }){
     const body = React.useRef(null);
+    const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
+    const input = globalState.matrixInput;
+    
+    if(datatype === "pitchtype"){
+        data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.typeCode))) : [];
+    } else if(datatype === "speed"){
+        data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.speed))) : [];
+    } else if(datatype === "position"){
+        data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.area))) : [];
+    }
 
     React.useEffect(() => {
         const margin = {top: 15, left: 15}

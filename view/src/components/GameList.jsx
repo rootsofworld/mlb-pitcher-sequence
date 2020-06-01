@@ -2,7 +2,7 @@ import React from 'react';
 import AllAtBatsContext from '../context/AllAtBatsContext';
 import PitcherProfilesContext from '../context/PitcherProfilesContext';
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
-import {updateCurrentPitcher, updateGameList} from '../utils/ActionMaker';
+import {updateCurrentPitcher, updateGameList, clearGameList} from '../utils/ActionMaker';
 
 export default function GameList(){
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext);
@@ -71,7 +71,7 @@ function GameRow({atbats, chosen, setChosen}){
     function clickRow(e){
         if(isChosen){
             e.target.closest('.game-list-row').style.border = '0px';
-            globalStateDispatcher(updateGameList([]))
+            globalStateDispatcher(clearGameList())
             setIsChosen(false)
             setChosen(null)
         } else if(chosen){
@@ -108,6 +108,7 @@ function GameRow({atbats, chosen, setChosen}){
 
     return (
         <div className="game-list-row" style={rowStyle} onClick={(e) => clickRow(e)}>
+            {atbats[0].date.split('-').slice(1).join('-')}
             {atbats.map(_ => <div style={barStyle(_)}/>)}
         </div>
     )

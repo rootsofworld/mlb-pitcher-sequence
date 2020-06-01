@@ -62,7 +62,7 @@ function Scatter(props) {
     const brush = d3.brush()
                       .extent([[margin.left, margin.top], [margin.left + props.width, margin.top + props.height]])
                       .handleSize(10)
-                      .on("end", brushed)
+                      .on("brush end", brushed)
     
     svg.append('g')
       .call(brush)

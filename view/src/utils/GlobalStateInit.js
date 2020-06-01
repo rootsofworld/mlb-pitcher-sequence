@@ -35,6 +35,7 @@ export default function GlobalStateInit({
         filteredAtBats: [],
         dateFilteredAtBats: [],
         gameListAtBats: [],
+        matrixInput: ab,
         
         
         isSituationSet : false,

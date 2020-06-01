@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import * as d3 from 'd3';
-//import BubbleList from './BubbleList';
+import BubbleList from './BubbleList';
 import BarChart from './BarChart';
 import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
 import AllAtBatsContext from '../context/AllAtBatsContext';
@@ -49,11 +49,11 @@ function PitcherFilter() {
         </span>
       </div>
       <div id="typelist" className="field-container">
-        {/*<BubbleList 
-            color={pitchColor}
+        {/* <BubbleList 
+            color={globalState.pitchColor}
             size={scale}
-            typeset={pitchType}
-        />*/}
+            typeset={globalState.typeset}
+        /> */}
         <BarChart
             margin={{top:20, left:25}}
             width={250}

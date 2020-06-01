@@ -21,6 +21,7 @@ import GlobalStateInit from './utils/GlobalStateInit';
 import * as ActionMaker from './utils/ActionMaker';
 import TransitionMatrix from "./utils/transitionMatrix";
 import Matrix from "./components/Matrix";
+import { EventEmitter } from "events";
 
 
 function App(props) {
@@ -80,6 +81,7 @@ function App(props) {
     //globalStateDispatcher(ActionMaker.updateSituation(defaultState))
     //
     //console.log(state);
+      
     console.log("Indexes Update: ", globalState.currentPitcher.indexes.length)
     //console.log(isStateFilterOpened)
     console.log("Typeset Update: ", globalState.typeset)
@@ -149,13 +151,13 @@ function App(props) {
             <GameList/>
             <div id="summary-graph">
               <Matrix
-                data={TransitionMatrix('pitchtype', globalState.gameListAtBats.map(_ => _.flow.map(__ => __.typeCode)))}
+                datatype={"pitchtype"}
               />
               <Matrix
-                data={TransitionMatrix('speed', globalState.gameListAtBats.map(_ => _.flow.map(__ => __.speed)))}
+                datatype={"speed"}
               />
               <Matrix
-                data={TransitionMatrix('position', globalState.gameListAtBats.map(_ => _.flow.map(__ => __.area)))}
+                datatype={"position"}
               />
                 {/*
                 <AtBatsConnector/>

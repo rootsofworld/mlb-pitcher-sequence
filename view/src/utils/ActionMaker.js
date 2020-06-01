@@ -57,6 +57,13 @@ export function updateGameList(atbats){
         atBats: atbats
     }
 }
+
+export function clearGameList(){
+    return {
+        type: "GAMELIST_CLEAR"
+    }
+}
+
 export function updateSPCard(card){
     return {
         type: "SPCARD_UPDATE",

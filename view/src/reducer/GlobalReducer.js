@@ -11,6 +11,7 @@ function globalReducer(state, action){
             hasCurrentPitcher: false,
             currentPitcher: undefined,
             atBats: [],
+            matrixInput: [],
             filteredAtBats: [],
             dateFilteredAtBats: [],
             typeset: [],
@@ -28,6 +29,7 @@ function globalReducer(state, action){
             hasCurrentPitcher: false,
             currentPitcher: undefined,
             atBats: [],
+            matrixInput: [],
             filteredAtBats: [],
             dateFilteredAtBats: [],
             typeset: [],
@@ -43,6 +45,7 @@ function globalReducer(state, action){
             hasCurrentPitcher: true,
             currentPitcher: action.currentPitcher,
             atBats: action.atBats,
+            matrixInput: action.atBats,
             dateFilteredAtBats: [],
             filteredAtBats: [],
             typeset: action.currentPitcher.typeset,
@@ -99,6 +102,7 @@ function globalReducer(state, action){
         console.log("Action: ", action.type)
         return Object.assign({}, state, {
             dateFilteredAtBats: state.atBats,
+            matrixInput: state.atBats,
             typeset: getTypeSet(state.atBats),
             filterSwitch: {
                 outs: false,
@@ -122,6 +126,7 @@ function globalReducer(state, action){
         return Object.assign({}, state, {
             dateFilteredAtBats: action.atBats,
             gameListAtBats: [],
+            matrixInput: action.atBats,
             resetSignal: false,
             typeset: getTypeSet(action.atBats),
             winRate: getWinRate(action.atBats),
@@ -133,7 +138,16 @@ function globalReducer(state, action){
         console.log("Action Data: ", action.atBats)
         return Object.assign({}, state, {
             gameListAtBats: action.atBats,
+            matrixInput: action.atBats,
             winRate: getWinRate(action.atBats),
+            spCard: null
+        })
+    }
+    if(action.type === "GAMELIST_CLEAR"){
+        console.log("Action: ", action.type)
+        return Object.assign({}, state, {
+            gameListAtBats: [],
+            matrixInput: (state.dateFilteredAtBats) ? state.dateFilteredAtBats : state.atBats,
             spCard: null
         })
     }
