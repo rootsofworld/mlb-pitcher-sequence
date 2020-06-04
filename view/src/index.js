@@ -151,20 +151,23 @@ function App(props) {
             <PitcherList/>
             <GameList/>
             <div id="summary-graph">
-              <Matrix
-                datatype={"pitchtype"}
-              />
-              <Matrix
-                datatype={"speed"}
-              />
-              <Matrix
-                datatype={"position"}
-              />
-              {/* <LinearLegend 
+              <div className="matrix-row">
+                <Matrix
+                  datatype={"pitchtype"}
+                />
+                <Matrix
+                  datatype={"speed"}
+                />
+                <Matrix
+                  datatype={"position"}
+                />
+              </div>
+              <br/>
+              <LinearLegend 
                 color={d3.scaleSequential().domain([0,1]).interpolator(d3.interpolateReds)}
                 width={250}
                 height={20}
-              /> */}
+              />
                 {/*
                 <AtBatsConnector/>
                 

@@ -8,9 +8,9 @@ export default function LinearLegend({
 }){
     const r = React.useRef(null);
     const margin = {left: 23, top: 5}
-    const rectWidth = Math.floor((width - 20) / 100);
+    const rectWidth = Math.floor((width - 46) / 10);
     const rectHeight = height - (margin.top * 2)
-    const arr = new Array(100)
+    const arr = new Array(10)
     for(let i=0; i < arr.length; i++) arr[i] = i+1; 
     
     React.useEffect(() => {
@@ -18,11 +18,11 @@ export default function LinearLegend({
         .selectAll('rect')
         .data(arr).enter()
         .append('rect')
-        .attr('x', (d, i) => margin.left + (i * rectWidth))
+        .attr('x', (d, i) => margin.left + (i * rectWidth + 1))
         .attr('y', margin.top)
         .attr('width', rectWidth - 0.1)
         .attr('height', rectHeight)
-        .attr('fill', (d, i) => color(i / 100))
+        .attr('fill', (d, i) => color(i / 10))
         
 
         d3.select(r.current)
@@ -33,8 +33,8 @@ export default function LinearLegend({
 
         d3.select(r.current)
         .append('text')
+        .attr('x', margin.left + (rectWidth * 10) + 5)
         .attr('y', margin.top + rectHeight)
-        .attr('x', width - margin.left)
         .text('1.0')
         .attr('font-size', 12)
 
