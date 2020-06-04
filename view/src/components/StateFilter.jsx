@@ -1,7 +1,10 @@
 import React from "react";
 import Bases from "./Bases";
+import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
+import {updateSituation, resetSituation} from '../utils/ActionMaker';
 
 function StateFilter(props) {
+  const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
   const indexBasesMap = baseState => {
     return {
       "third-base": baseState[0],
@@ -11,56 +14,91 @@ function StateFilter(props) {
   };
 
   function handleBasesUpdate(evt) {
-    const basesMapping = indexBasesMap(props.state.bases);
+    let currentBases = globalState.situation.bases;
+    const basesMapping = indexBasesMap(currentBases);
     basesMapping[evt.target.id] = !!basesMapping[evt.target.id] ? 0 : 1;
-    props.onStateUpdate({ ...props.state, bases: Object.values(basesMapping) });
     evt.target.style.backgroundColor = basesMapping[evt.target.id]
       ? "orange"
       : "gray";
+    //props.onStateUpdate({ ...props.state, bases: Object.values(basesMapping) });
+    globalStateDispatcher(updateSituation({...globalState.situation, bases: Object.values(basesMapping)}, {...globalState.filterSwitch}))
   }
 
   function handleOutsUpdate(evt) {
-    props.onStateUpdate({ ...props.state, outs: Number(evt.target.value) });
+    //props.onStateUpdate({ ...props.state, outs: Number(evt.target.value) });
+    globalStateDispatcher(updateSituation({...globalState.situation, outs: Number(evt.target.value)}, {...globalState.filterSwitch}))
   }
 
   function handleBatterUpdate(evt) {
-    props.onStateUpdate({ ...props.state, batter: evt.target.value });
+    //props.onStateUpdate({ ...props.state, batter: evt.target.value });
+    globalStateDispatcher(updateSituation({...globalState.situation, batter: evt.target.value}, {...globalState.filterSwitch}))
   }
 
-  function stateFilterOnOff(evt){
-    props.onFilterSwitch(evt.target.checked)
+  function reset(evt){
+    globalStateDispatcher(resetSituation());
+    //Manually reset stateFilter's View
+    let bases = document.querySelectorAll('.base');
+    let outs = document.querySelector('#outs');
+    let batter = document.querySelector('#batter-name');
+    let basesSwitch = document.querySelector('#bases-switch')
+    let outsSwitch = document.querySelector('#outs-switch')
+    let batterSwitch = document.querySelector('#batter-switch')
+    
+    basesSwitch.checked = false;
+    outsSwitch.checked = false;
+    batterSwitch.checked = false;
+    bases.forEach(_ => _.style.backgroundColor = "gray");
+    outs.value = 0;
+    batter.value = "";
+  }
+
+  function switchUpdate(e){
+    const field = e.target.id.split('-')[0];
+    const newFilterSwitch = Object.assign({}, globalState.filterSwitch);
+    newFilterSwitch[field] = !newFilterSwitch[field];
+    globalStateDispatcher(updateSituation({...globalState.situation}, newFilterSwitch))
   }
 
   return (
     <div id="state-filter" className="input-container">
       <div className="field-container">
-        <p>Batter</p>
-        <div>
-          <input
-            id="batter-name"
-            type="text"
-            placeholder="Batter's name or L/R"
-            onChange={ handleBatterUpdate }
-          />
+        <p>Batter:&nbsp;
+          <span>
+            <input
+              id="batter-name"
+              type="text"
+              placeholder="Batter's name or L/R"
+              onChange={ e => handleBatterUpdate(e) }
+            />
+          </span>
+        </p>
+      </div>
+      <div className="field-container">
+        <div className="outs-bases">
+          <div>
+            <div>
+              <span>Outs:</span>
+              <span>
+                <select id="outs" defaultValue="0" onChange={ e => handleOutsUpdate(e) }>
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </span>
+            </div>
+          </div>
+          <Bases handler={ e => handleBasesUpdate(e) } />
         </div>
       </div>
-      <div className="field-container">
-        <span>
-          <span style={{marginRight:'10px'}}>
-            Outs:
-          </span>
-          <select id="outs" defaultValue="0" onChange={ handleOutsUpdate }>
-            <option>0</option>
-            <option>1</option>
-            <option>2</option>
-          </select>
-        </span>
-      </div>
-      <Bases handler={ handleBasesUpdate } />
       <div className="seperator"/>
-      <div className="field-container">
-        <label htmlFor="all">StateFilter On/Off</label>
-        <input type='checkbox' id="all" onChange={ stateFilterOnOff } defaultChecked={props.isFilterOn}/>
+      <div className="switch">
+        <label htmlFor="batter-switch">Batter</label>
+        <input id="batter-switch" type="checkbox" onChange={(e) => switchUpdate(e)}/>
+        <label htmlFor="outs-switch">Outs</label>
+        <input id="outs-switch" type="checkbox" onChange={(e) => switchUpdate(e)}/>
+        <label htmlFor="bases-switch">Bases</label>
+        <input id="bases-switch" type="checkbox" onChange={(e) => switchUpdate(e)}/>
+        <button id="all" onClick={ reset }>RESET</button>
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ export default class Zone {
         this.yScale = d3.scaleLinear().range([this.zoneHeight, 0]).domain([0, 4])
         this.xZoneScale = d3.scaleLinear().range([0, this.zoneWidth]).domain([0, 4])
         this.yZoneScale = d3.scaleLinear().range([0, this.zoneHeight]).domain([0, 4])
-        this.color = d3.scaleOrdinal(colorSet).domain(["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"])
+        this.color = (typeof colorSet !== 'function') ? d3.scaleOrdinal(colorSet).domain(["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"]) : colorSet;
         /*
         this.polygons =  this.g.selectAll('polygon')
                         .data(areas)

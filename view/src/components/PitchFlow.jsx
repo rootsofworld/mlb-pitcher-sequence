@@ -12,7 +12,8 @@ function PitchFlow({
     width=400,
     height=400,
     color=null,
-    data=[],
+    PAfromBrush=[],
+    PAfromState=[],
     typeset=[]
 }){
     const svgEl = useRef(null)
@@ -25,6 +26,7 @@ function PitchFlow({
                             .extent([[0, 0], [width-150, height]])
     const topo = useMemo(
         () => {
+            const data = (PAfromBrush) ? PAfromBrush : PAfromState;
             if( !data ) {
                 return []
             } else {
@@ -54,10 +56,12 @@ function PitchFlow({
                 let allSeq = data.map(_ => _.flow)
                 allSeq.forEach((_, index) => {
                     for(let i = 0 ;i < _.length; i++){
+                        //TODO: currentType goes wrong
                         let currentType = flow[i].get(_[i].typeCode)
                         if(!currentType){
                             console.log("Can't find: ", _[i].typeCode)
                         }
+            
                         currentType.used = currentType.used + 1
                         currentType.result[_[i].resultCode] = currentType.result[_[i].resultCode] + 1
                         currentType.speed = currentType.speed + _[i].speed
@@ -73,7 +77,7 @@ function PitchFlow({
                         t.speed = Number.parseFloat((t.speed / t.used).toFixed(2))
                     }
                 }
-                console.log(flow)
+                //console.log(flow)
                 flow = flow.map(_ => Array.from(_.values()))
                 let nodes = flow.flat()
                 let links = []
@@ -83,7 +87,13 @@ function PitchFlow({
                     nextT.forEach(t => {
                         const nextN = nodes.find(n => n.pitchIndex === node.pitchIndex+1 && n.type === t[0])
                         if(nextN){
-                            links.push( Link(`${node.pitchIndex}-${node.type}`, `${nextN.pitchIndex}-${nextN.type}`, t[1]) )
+                            links.push( 
+                                {
+                                    source:`${node.pitchIndex}-${node.type}`,
+                                    target: `${nextN.pitchIndex}-${nextN.type}`,
+                                    value: t[1]
+                                }
+                            )
                         }
                     })
                 })
@@ -114,20 +124,9 @@ function PitchFlow({
             }
         },
         //TODO: Find out why [data, typeset] will cause useMemo using new data but old typeset
-        [typeset]
+        [typeset, PAfromBrush]
     )
-
-    function Link(source, target, value){
-        return {
-            source,
-            target,
-            value
-        }
-    }
     
-    function getSequence(node){
-
-    }
     
 
     useEffect(() => {
@@ -168,14 +167,14 @@ function PitchFlow({
         linkGroupWithData.enter()
                             .append('path')
                             .attr('class', 'link')
-                            .style("mix-blend-mode", "normal")
+                            .style("mix-blend-mode", "difference")
                             .attr("d", sankeyLinkHorizontal())
                             .attr("stroke", d => color(d.source.type))
                             .attr('opacity', 0.5)
                             .attr("stroke-width", d => Math.max(1, d.width))
         
         console.log("Topo: ", topo)
-    }, [topo])
+    }, [PAfromState, PAfromBrush])
     
     return <svg ref={svgEl} width={width} height={height}/>
 }

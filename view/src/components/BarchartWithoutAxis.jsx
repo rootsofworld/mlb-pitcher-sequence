@@ -51,8 +51,6 @@ function BarChart(props){
 
     return (
         <svg width={props.width} height={props.height} ref={group}>
-            <XAxis scale={bandScale} transform={{...props.margin, top:contentHeight+props.margin.top}}/>
-            <YAxis scale={yScale} transform={{...props.margin}}/>
         </svg>
     );
 }
