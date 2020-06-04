@@ -10,6 +10,7 @@ import Filter from "./components/Filter";
 import PitcherList from "./components/PitcherList";
 import GameList from "./components/GameList";
 import Timeline from "./components/Timeline";
+import LinearLegend from "./components/LinearLegend";
 import AtBatsConnector from "./components/AtBatsConnector";
 // import PitchFlow from "./components/PitchFlow";
 import PitchSeqCardBoard from "./components/PitchSeqCardBoard";
@@ -159,6 +160,11 @@ function App(props) {
               <Matrix
                 datatype={"position"}
               />
+              {/* <LinearLegend 
+                color={d3.scaleSequential().domain([0,1]).interpolator(d3.interpolateReds)}
+                width={250}
+                height={20}
+              /> */}
                 {/*
                 <AtBatsConnector/>
                 

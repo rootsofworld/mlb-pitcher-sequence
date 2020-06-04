@@ -92,6 +92,7 @@ function globalReducer(state, action){
             situation: action.situation,
             isSituationSet: true,
             dateFilteredAtBats: newAtBats,
+            matrixInput: newAtBats,
             typeset: getTypeSet(newAtBats),
             filterSwitch: action.filterSwitch,
             winRate: getWinRate(newAtBats),

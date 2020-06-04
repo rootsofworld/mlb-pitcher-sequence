@@ -209,13 +209,13 @@ function resultToColor(d){
         case "SS":
         case "CS":
         case "F":
-            return "red";
+            return "gray";
         case "B":
-            return "black";
+            return "orange";
         case "IP":
-            return 'purple';
+            return 'orange';
         case "IPO":
-            return "green";
+            return "gray";
         default:
             return 'gray';
 

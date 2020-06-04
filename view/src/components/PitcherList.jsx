@@ -71,8 +71,10 @@ function PitcherRow({ctn, color, typeset, name, side, dispatcher}){
 
     function getPitcher(e, name){
         let allRow = document.querySelectorAll('.pitcher-list-row')
+        //let allName = document.querySelectorAll('.pitcher-list-name')
         allRow.forEach(_ => { _.style.backgroundColor = "white"})
-        e.target.closest('div div').style.backgroundColor = "#EEEEEE";
+        //allName.forEach(_ => { _.style.backgroundColor = "white"})
+        e.target.closest('.pitcher-list-row').style.backgroundColor = "#EEEEEE";
         const newPitcherProfile = pitcherProfiles.find(pp => pp.name === name)
         dispatcher(updateCurrentPitcher(newPitcherProfile, newPitcherProfile.indexes.map(i => allAtBats[i])))
     }
