@@ -95,7 +95,12 @@ export default class Zone {
                         .attr('stroke', 'blue')
                         .attr('fill', 'white')
         */
+       this.getBlocks = function(number){
+           return areas[number].points.map(_ => [this.xScale(_[0]), this.yScale(_[1])]);
+       }
+       //this.scaledPoints = areas.map(() => ))
     }
+
 
     get szW(){
         return this.xZoneScale(1.92);

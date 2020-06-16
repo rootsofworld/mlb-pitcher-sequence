@@ -21,8 +21,10 @@ import GlobalReducer from './reducer/GlobalReducer';
 import GlobalStateInit from './utils/GlobalStateInit';
 import * as ActionMaker from './utils/ActionMaker';
 import TransitionMatrix from "./utils/transitionMatrix";
-import Matrix from "./components/Matrix";
-import { EventEmitter } from "events";
+import PitchTypeMatrix from "./components/PitchTypeMatrix";
+import SpeedMatrix from "./components/SpeedMatrix";
+import LocationMatrix from "./components/LocationMatrix";
+
 
 
 function App(props) {
@@ -152,21 +154,21 @@ function App(props) {
             <GameList/>
             <div id="summary-graph">
               <div className="matrix-row">
-                <Matrix
+                <PitchTypeMatrix
                   datatype={"pitchtype"}
                 />
-                <Matrix
+                <SpeedMatrix
                   datatype={"speed"}
                 />
-                <Matrix
+                <LocationMatrix
                   datatype={"position"}
                 />
               </div>
               <br/>
               <LinearLegend 
                 color={d3.scaleSequential().domain([0,1]).interpolator(d3.interpolateReds)}
-                width={250}
-                height={20}
+                width={400}
+                height={50}
               />
                 {/*
                 <AtBatsConnector/>

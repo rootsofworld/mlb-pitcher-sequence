@@ -85,6 +85,12 @@ function Timeline(props){
             .attr('class', 'brush') 
             .call(brush)
 
+        svg.append('text')
+            .text("打席日期分佈")
+            .attr('x', props.width * 0.3)
+            .attr('y', props.height - 5)
+            .attr('font-size', '8px')
+
         function brushed(){
             let selected = []
             const selection = d3.event.selection

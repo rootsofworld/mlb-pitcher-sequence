@@ -4,8 +4,8 @@ import GlobalUseReducerContext from '../context/GlobalUseReducerContext';
 import TransitionMatrix from "../utils/transitionMatrix";
 
 export default function Matrix({
-    width=300,
-    height=300,
+    width=450,
+    height=450,
     data = [],
     datatype = ""
 }){
@@ -13,16 +13,10 @@ export default function Matrix({
     const [globalState, globalStateDispatcher] = React.useContext(GlobalUseReducerContext)
     const input = globalState.matrixInput;
     
-    if(datatype === "pitchtype"){
-        data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.typeCode))) : [];
-    } else if(datatype === "speed"){
-        data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.speed))) : [];
-    } else if(datatype === "position"){
-        data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.area))) : [];
-    }
+    data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.typeCode))) : [];    
 
     React.useEffect(() => {
-        const margin = {top: 15, left: 15}
+        const margin = {top: 50, left: 50}
         const padding = 0.1;
         const size =  (width - margin.left*3) / data.states.length;
         const xScale = d3.scaleLinear().range([0, width-margin.left-size-margin.left]).domain([0, data.states.length-1])
@@ -58,13 +52,24 @@ export default function Matrix({
 
         svg.append('g')
         .attr('class', 'y-axis')
-        .attr('transform', `translate(${0},${margin.top+(size/2)})`)
+        .attr('transform', `translate(${35},${margin.top+(size/2)})`)
         .selectAll('text')
         .data(data.states)
             .join('text')
                 .attr('y', (d, i) => yScale(i))
                 .attr('font-size', '50%')
                 .text(d => d)
+
+        svg.append('text')
+        .attr('x', width * 0.3)
+        .attr('y', 20)
+        .text('Next Pitch Type')
+
+        svg.append('text')
+        .attr('x', -height * 0.7)
+        .attr('y', 15)
+        .text('Current Pitch Type')
+        .attr('transform', `rotate(${-90})`)
     })
 
     return (        
