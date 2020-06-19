@@ -9,6 +9,7 @@ function Filter(props) {
   return (
     <div className="filters">
       <TypeGlyph/>
+      <div className="seperator"/>
       <PitcherFilter/>
       <StateFilter/>
     </div>

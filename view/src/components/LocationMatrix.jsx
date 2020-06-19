@@ -63,6 +63,10 @@ export default function Matrix({
                 .attr('font-size', '50%')
                 .text(d => d)
 
+    })
+
+    React.useEffect(() => {
+        const svg = d3.select(`svg.matrix-${data.type}`)
         svg.append('text')
         .attr('x', width * 0.3)
         .attr('y', 20)
@@ -73,7 +77,7 @@ export default function Matrix({
         .attr('y', 15)
         .text('Current Pitch Location')
         .attr('transform', `rotate(${-90})`)
-    })
+    }, [])
 
     return (        
         <svg className={`matrix-${data.type}`} width={width} height={height} viewBox={`0 0 ${width} ${height}`} ref={body}/>

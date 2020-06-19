@@ -136,8 +136,8 @@ function App(props) {
                 <option value="Washington Nationals">Washington Nationals</option>
               </select>
               <Scatter
-                width={300}
-                height={300}
+                width={280}
+                height={280}
                 pitcherProfiles={props.pitcherProfiles}
               />
             </div>
@@ -187,6 +187,7 @@ function App(props) {
               
             </div>
             <div id="pitch-seq">
+                <div style={{"margin": "15px auto",}}>Pitch Sequence Details</div>
                 <PitchSeqCardBoard
                   PAfromState={globalState.atBats}
                   typeset={globalState.typeset}

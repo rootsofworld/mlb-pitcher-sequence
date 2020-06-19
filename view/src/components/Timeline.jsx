@@ -86,7 +86,7 @@ function Timeline(props){
             .call(brush)
 
         svg.append('text')
-            .text("打席日期分佈")
+            .text("PA Distribution By Date")
             .attr('x', props.width * 0.3)
             .attr('y', props.height - 5)
             .attr('font-size', '8px')

@@ -43,9 +43,9 @@ function BarChart(props){
 
         unBoundData.append('rect')
             .attr('fill', d => props.color(d[0]))
-            .attr('x', d => bandScale(d[0]))
+            .attr('x', (d, i) => 5 + (i * contentWidth * 0.25))
             .attr('y', d => size(d[1]))
-            .attr('width', bandScale.bandwidth())
+            .attr('width',contentWidth * 0.2)
             .attr('height', d => contentHeight - size(d[1]))
     }, [props.typeset])
 

@@ -13,9 +13,9 @@ function Scatter(props) {
   let color = globalState.pitchColor
   
   const margin = {
-    top: 30,
+    top: 15,
     left: 30,
-    bottom: 30,
+    bottom: 15,
     right: 30
   };
   const scatterSize = {
