@@ -19,8 +19,8 @@ export default function Matrix({
         // }, globalState.matrixInput)
         
     data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.area))) : [];
-    const size =  (width - margin.left*3) / data.states.length;
-    const xScale = d3.scaleLinear().range([0, width-margin.left-size-margin.left]).domain([0, data.states.length-1])
+    const size =  (width - margin.left*3) / data.nextStates.length;
+    const xScale = d3.scaleLinear().range([0, width-margin.left-size-margin.left]).domain([0, data.nextStates.length-1])
     const yScale = d3.scaleLinear().range([0, height-margin.top-size-margin.left]).domain([0, data.states.length-1])
 
     React.useEffect(() => {
@@ -36,8 +36,8 @@ export default function Matrix({
             .selectAll('rect')
                 .data(data.values.flat())
                 .join('rect')
-                    .attr('x', (d, i) => xScale(i % data.states.length))
-                    .attr('y', (d, i) => yScale((Math.floor(i / data.states.length))))
+                    .attr('x', (d, i) => xScale(i % data.nextStates.length))
+                    .attr('y', (d, i) => yScale((Math.floor(i / data.nextStates.length))))
                     .attr('width', size)
                     .attr('height', size)
                     .attr('stroke', 'none')
@@ -49,7 +49,7 @@ export default function Matrix({
         .attr('class', 'x-axis')
         .attr('transform', `translate(${margin.left+(size/3)},${margin.top})`)
         .selectAll('text')
-        .data(data.states)
+        .data(data.nextStates)
             .join('text')
                 .attr('x', (d, i) => xScale(i))
                 .attr('font-size', d => (d < 10) ? '70%' : '50%')
@@ -78,7 +78,7 @@ export default function Matrix({
         .selectAll('text')
         .data(data.values)
             .join('text')
-                .attr('x', xScale(data.states.length) + size + 55)
+                .attr('x', xScale(data.nextStates.length) + size + 55)
                 .attr('y', (d, i) => margin.top + size*0.7 + yScale(i))
                 .attr('font-size', '80%')
                 .attr('text-anchor', 'end')
@@ -100,7 +100,7 @@ export default function Matrix({
 
         svg.append('rect')
         .attr('class', 'matrix-strikezone')
-        .attr('transform', `translate(${margin.left}, ${margin.top-2 + xScale(9)})`)
+        .attr('transform', `translate(${margin.left}, ${margin.top-2 + xScale(9)+size*0.7})`)
         .attr('width', size * 10 + (size*0.68))
         .attr('height', 1.5)
         //.attr('stroke', 'black')
@@ -108,7 +108,7 @@ export default function Matrix({
 
         svg.append('rect')
         .attr('class', 'matrix-strikezone')
-        .attr('width', size * 10 + (size*0.68))
+        .attr('width', size * 10.7 + (size*0.68))
         .attr('height', 1.5)
         //.attr('stroke', 'black')
         .attr('fill', 'green')

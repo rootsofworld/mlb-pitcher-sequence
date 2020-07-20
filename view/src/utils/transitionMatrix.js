@@ -12,7 +12,7 @@ export default function TransitionMatrix(type, data){
     } else if(type === "position"){
         states = ['1','2','3','4','5','6','7','8','9','10','11','12','13'];
     } else if(type === "pitchtype"){
-        states = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "Others"];
+        states = ["FF", "CH", "CU", "SL", "FT", "FC", "KC", "SI", "FS", "OT"];
     } else {
         throw new Error("Wrong state type for Transition Matrix!!!");
     }
@@ -24,33 +24,58 @@ export default function TransitionMatrix(type, data){
     for(let i=0; i < states.length; i++){
         transitionName[i] = [];
         transitionValue[i] = [];
-        for(let j=0; j < states.length; j++){
-            transitionName[i][j] = `${states[i]}->${states[j]}`;
-            transitionValue[i][j] = 0;
+        for(let j=0; j < states.length + 1; j++){
+            if(j === states.length){
+                transitionName[i][j] = `${states[i]}->end`;
+                transitionValue[i][j] = 0;
+            } else {
+                transitionName[i][j] = `${states[i]}->${states[j]}`;
+                transitionValue[i][j] = 0;
+            }
         }
         stateTotalCounts.set(states[i], 0)
     }
 
     for(let i=0; i < data.length; i++){
         let s1, s2;
-        for(let j=0; j < data[i].length - 1; j++){
-            if(type === 'speed'){
-                s1 = speedToRange(data[i][j]);
-                s2 = speedToRange(data[i][j+1]);
+        for(let j=0; j < data[i].length; j++){
+            if(j === data[i].length-1){
+                if(type === 'speed'){
+                    s1 = speedToRange(data[i][j]);
+                    s2 = 'end';
+                } else {
+                    s1 = String(data[i][j]);
+                    s2 = 'end';
+                }
+                try {
+                    transitionValue[states.indexOf(s1)][states.length]++;
+                } catch(e) {
+                    console.log("TV: ", transitionValue)
+                    console.log("s1: ", states.indexOf(s1))
+                    console.log("s2: ", states.length)
+                    console.log("tm data: ", data)
+                }
+                let newCounts = stateTotalCounts.get(s1) + 1;
+                stateTotalCounts.set(s1, newCounts);
             } else {
-                s1 = String(data[i][j]);
-                s2 = String(data[i][j+1]);
+                if(type === 'speed'){
+                    s1 = speedToRange(data[i][j]);
+                    s2 = speedToRange(data[i][j+1]);
+                } else {
+                    s1 = String(data[i][j]);
+                    s2 = String(data[i][j+1]);
+                }
+                try {
+                    transitionValue[states.indexOf(s1)][states.indexOf(s2)]++;
+                } catch(e) {
+                    console.log("TV: ", transitionValue)
+                    console.log("s1: ", states.indexOf(s1))
+                    console.log("s2: ", states.indexOf(s2))
+                    console.log("tm data: ", data)
+                }
+                let newCounts = stateTotalCounts.get(s1) + 1;
+                stateTotalCounts.set(s1, newCounts);
             }
-            try {
-                transitionValue[states.indexOf(s1)][states.indexOf(s2)]++;
-            } catch(e) {
-                console.log("TV: ", transitionValue)
-                console.log("s1: ", states.indexOf(s1))
-                console.log("s2: ", states.indexOf(s2))
-                console.log("tm data: ", data)
-            }
-            let newCounts = stateTotalCounts.get(s1) + 1;
-            stateTotalCounts.set(s1, newCounts);
         }
     }
     console.log("transition Value: ", transitionValue)
@@ -61,14 +86,14 @@ export default function TransitionMatrix(type, data){
             if(v / stateTotalCounts.get(states[i])){
                 return {
                     state: states[i],
-                    nextState: states[j],
+                    nextState: (j === states.length) ? 'end' : states[j],
                     count: v,
                     prob: (v / stateTotalCounts.get(states[i])).toFixed(2)
                 }
             } else {
                 return {
                     state: states[i],
-                    nextState: states[j],
+                    nextState: (j === states.length) ? 'end' : states[j],
                     count: v,
                     prob: 0
                 }
@@ -77,9 +102,12 @@ export default function TransitionMatrix(type, data){
     }
     
     //console.log("transition Value: ", transitionValue)
+    let nextStates = states.slice();
+    nextStates.push('End');
     return {
         type: type,
         states: states,
+        nextStates: nextStates,
         values: transitionValue,
         totals: stateTotalCounts
     }

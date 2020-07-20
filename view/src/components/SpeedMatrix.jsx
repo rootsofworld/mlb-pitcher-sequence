@@ -16,8 +16,8 @@ export default function Matrix({
    
     data = (datatype) ? TransitionMatrix(datatype, input.map(_ => _.flow.map(__ => __.speed))) : [];
 
-    const size =  (width - margin.left*3) / data.states.length;
-    const xScale = d3.scaleLinear().range([0, width-margin.left-size-margin.left]).domain([0, data.states.length-1])
+    const size =  (width - margin.left*3) / data.nextStates.length;
+    const xScale = d3.scaleLinear().range([0, width-margin.left-size-margin.left]).domain([0, data.nextStates.length-1])
     const yScale = d3.scaleLinear().range([0, height-margin.top-size-margin.left]).domain([0, data.states.length-1])
 
     React.useEffect(() => {
@@ -33,8 +33,8 @@ export default function Matrix({
             .selectAll('rect')
                 .data(data.values.flat())
                 .join('rect')
-                    .attr('x', (d, i) => xScale(i % data.states.length))
-                    .attr('y', (d, i) => yScale((Math.floor(i / data.states.length))))
+                    .attr('x', (d, i) => xScale(i % data.nextStates.length))
+                    .attr('y', (d, i) => yScale((Math.floor(i / data.nextStates.length))))
                     .attr('width', size)
                     .attr('height', size)
                     .attr('stroke', 'none')
@@ -44,7 +44,7 @@ export default function Matrix({
         .attr('class', 'x-axis')
         .attr('transform', `translate(${margin.left+(size/3)},${margin.top})`)
         .selectAll('text')
-        .data(data.states)
+        .data(data.nextStates)
             .join('text')
                 .attr('x', (d, i) => xScale(i))
                 .attr('font-size', '50%')
@@ -73,7 +73,7 @@ export default function Matrix({
         .selectAll('text')
         .data(data.values)
             .join('text')
-                .attr('x', xScale(data.states.length) + size + 48)
+                .attr('x', xScale(data.nextStates.length) + size + 48)
                 .attr('y', (d, i) => margin.top + size*0.7 + yScale(i))
                 .attr('font-size', '80%')
                 .attr('text-anchor', 'end')
