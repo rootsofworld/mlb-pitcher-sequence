@@ -167,3 +167,7 @@ div.tooltip {
   border-radius: 8px;			
   pointer-events: none;			
 }
+
+.matrix-wrapper {
+  margin-right: 30px;
+}

@@ -41,8 +41,14 @@ export default function TransitionMatrix(type, data){
                 s1 = String(data[i][j]);
                 s2 = String(data[i][j+1]);
             }
-            
-            transitionValue[states.indexOf(s1)][states.indexOf(s2)]++;
+            try {
+                transitionValue[states.indexOf(s1)][states.indexOf(s2)]++;
+            } catch(e) {
+                console.log("TV: ", transitionValue)
+                console.log("s1: ", states.indexOf(s1))
+                console.log("s2: ", states.indexOf(s2))
+                console.log("tm data: ", data)
+            }
             let newCounts = stateTotalCounts.get(s1) + 1;
             stateTotalCounts.set(s1, newCounts);
         }
@@ -51,14 +57,31 @@ export default function TransitionMatrix(type, data){
     console.log("total: ", stateTotalCounts)
     //Calculate Probabilities
     for(let i=0; i < states.length; i++){
-        transitionValue[i] = transitionValue[i].map(v => (v / stateTotalCounts.get(states[i])) ? (v / stateTotalCounts.get(states[i])).toFixed(2) : 0);
+        transitionValue[i] = transitionValue[i].map((v, j) => {
+            if(v / stateTotalCounts.get(states[i])){
+                return {
+                    state: states[i],
+                    nextState: states[j],
+                    count: v,
+                    prob: (v / stateTotalCounts.get(states[i])).toFixed(2)
+                }
+            } else {
+                return {
+                    state: states[i],
+                    nextState: states[j],
+                    count: v,
+                    prob: 0
+                }
+            }
+        })
     }
     
     //console.log("transition Value: ", transitionValue)
     return {
         type: type,
         states: states,
-        values: transitionValue
+        values: transitionValue,
+        totals: stateTotalCounts
     }
 }
 
