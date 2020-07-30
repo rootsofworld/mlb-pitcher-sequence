@@ -1,6 +1,7 @@
 # Visual Analytics for Baseball Pitching Strategy
 
 ## Install & Run
+* Check your browser is up to date.(some old version don't support Array.flat())
 * Use Git
 ```
 git clone https://github.com/rootsofworld/mlb-data-server.git
@@ -9,7 +10,7 @@ npm install
 cd view && npm run build && cd ..
 node server.js
 ```
-* Use Docker(ok on my laptop, but error on other PC, so NOT YET ready)
+* Use Docker
 ```
 docker pull hsf99code/pitchvis:latest
 docker run -dp 3000:3000 hsf99code/pitchvis
@@ -55,8 +56,8 @@ root
 * Clear magic number
 * [BUG] GameList multi-select Bug
 * [BUG] Timeline brush color-missing Bug(sometimes)
-* [BUG] StateFilter some bases state not work
-* [BUG] StateFilter batter field not work
+* [BUG] StateFilter some bases state have problem
+* [BUG] StateFilter batter field need fix
 ### Contact
 
 * hsfo3o@gmail.com
