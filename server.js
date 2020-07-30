@@ -8,7 +8,11 @@ let app = express();
 
 const port = (process.argv[2]) ? process.argv[2] : 3000;
 
-app.use(express.static(path.resolve('static')))
+app.use(express.static(path.join(__dirname, './view/build')))
+
+app.get('/', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, './view/build/index.html'))
+})
 
 app.get('/data/all-pa', (req, res) => {
     
