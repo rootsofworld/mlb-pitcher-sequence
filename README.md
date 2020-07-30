@@ -1,7 +1,19 @@
 # Visual Analytics for Baseball Pitching Strategy
 
 ## Install & Run
-* Docker
+* Use Git
+```
+git clone https://github.com/rootsofworld/mlb-data-server.git
+cd mlb-data-server
+npm install
+cd view && npm run build && cd ..
+node server.js
+```
+* Use Docker(ok on my laptop, but error on other PC, so NOT YET ready)
+```
+docker pull hsf99code/pitchvis:latest
+docker run -dp 3000:3000 hsf99code/pitchvis
+```
 ## Project Structure
 只列出較重要的檔案
 ```
