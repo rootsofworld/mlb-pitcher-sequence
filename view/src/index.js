@@ -207,12 +207,12 @@ getData().then(data => {
 
   async function getData(){
 
-    let res = await fetch('http://localhost:3000/data/all-pa', {mode: 'cors'})
+    let res = await fetch('/data/all-pa', {mode: 'cors'})
     let response = new Response(res.body)
     let all_pa =  await response.json()
 
     //pitcher tsne data
-    let resPP = await fetch('http://localhost:3000/data/pitcher-profile', {mode: 'cors'})
+    let resPP = await fetch('/data/pitcher-profile', {mode: 'cors'})
     let pp =  await resPP.json()
 
     return [all_pa, pp];
