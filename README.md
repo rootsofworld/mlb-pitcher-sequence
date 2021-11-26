@@ -1,3 +1,5 @@
+![overview](https://github.com/rootsofworld/mlb-data-server/blob/027fe19463bcffbb44197bbba2289ff4542dc0bc/asset/overview.png)
+
 # Visual Analytics for Baseball Pitching Strategy
 
 ## Install & Run
@@ -52,12 +54,7 @@ root
 
 ```
 
-### TODO
-* Clear magic number
-* [BUG] GameList multi-select Bug
-* [BUG] Timeline brush color-missing Bug(sometimes)
-* [BUG] StateFilter some bases state have problem
-* [BUG] StateFilter batter field need fix
+
 ### Contact
 
 * hsfo3o@gmail.com
