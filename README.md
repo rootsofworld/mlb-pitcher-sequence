@@ -54,7 +54,3 @@ root
 
 ```
 
-
-### Contact
-
-* hsfo3o@gmail.com
